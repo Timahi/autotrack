@@ -15,6 +15,17 @@ export default defineNuxtPlugin(() => {
       })
     },
 
+    async getById(profileId: number) {
+      return new Promise<Profile>(async (resolve, reject) => {
+        try {
+          const data = await invoke<any>('get_profile_by_id_command', { profileId })
+          resolve(Profile.fromJSON(data))
+        } catch (error) {
+          reject(error)
+        }
+      })
+    },
+
     async create({ name }: z.infer<typeof this.schemas.create>) {
       return new Promise<Profile>(async (resolve, reject) => {
         try {

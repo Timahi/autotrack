@@ -1,6 +1,6 @@
 use crate::db::{get_database_url, Database};
 use crate::models::{NewProfile, Profile};
-use crate::repositories::{create_profile, get_profiles};
+use crate::repositories::{create_profile, get_profile_by_id, get_profiles};
 use chrono::Utc;
 use std::fs;
 use std::path::PathBuf;
@@ -43,7 +43,7 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             import_database_to_path_command, export_database_to_path_command,
-            get_profiles_command, create_profile_command
+            get_profiles_command, get_profile_by_id_command, create_profile_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -95,9 +95,17 @@ fn export_database_to_path_command(app_handle: AppHandle, path: String) -> Resul
 #[tauri::command]
 fn get_profiles_command(app_state: State<'_, Mutex<AppState>>) -> Result<Vec<Profile>, String> {
     let mut state = app_state.lock().unwrap();
-    let mut conn = &mut state.db.conn;
+    let conn = &mut state.db.conn;
 
-    get_profiles(&mut conn)
+    get_profiles(conn)
+}
+
+#[tauri::command]
+fn get_profile_by_id_command(app_state: State<'_, Mutex<AppState>>, profile_id: i32) -> Result<Profile, String> {
+    let mut state = app_state.lock().unwrap();
+    let conn = &mut state.db.conn;
+
+    get_profile_by_id(conn, profile_id)
 }
 
 #[tauri::command]
@@ -105,7 +113,7 @@ fn create_profile_command(app_state: State<'_, Mutex<AppState>>, name: String) -
     String> {
     let new_profile = NewProfile { name: &name, created_at: &Utc::now().naive_utc(), updated_at: &Utc::now().naive_utc() };
     let mut state = app_state.lock().unwrap();
-    let mut conn = &mut state.db.conn;
+    let conn = &mut state.db.conn;
 
-    create_profile(&mut conn, new_profile)
+    create_profile(conn, new_profile)
 }

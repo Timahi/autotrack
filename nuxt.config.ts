@@ -14,7 +14,7 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@nuxt/ui', 'nuxt-lucide-icons'],
+  modules: ['@nuxt/ui', 'nuxt-lucide-icons', '@pinia/nuxt'],
 
   lucide: {
     namePrefix: 'I',
@@ -22,5 +22,9 @@ export default defineNuxtConfig({
 
   colorMode: {
     preference: 'dark',
+  },
+
+  pinia: {
+    storesDirs: ['./src-ui/stores/**'],
   },
 })

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 const { $profileService, $importExportService } = useNuxtApp()
 
-const { data, refresh } = useAsyncData('profiles', () => $profileService.getAll())
-
 const toast = useToast()
 
-const isImportConfirmationModalOpen = ref(false)
+const { data, refresh } = useAsyncData('profiles', () => $profileService.getAll())
+
+const importConfirmationModalOpen = ref(false)
 
 async function handleImport() {
   try {
@@ -39,17 +39,19 @@ async function handleExport() {
   <div class="min-h-screen grid grid-rows-3 place-items-center text-neutral-300 mx-4">
     <h1 class="text-4xl font-semibold">Sélectionner un profil</h1>
     <div class="flex flex-wrap items-center gap-6">
-      <button
+      <!--suppress HtmlUnknownTarget -->
+      <NuxtLink
         class="hover:scale-105 duration-200"
         v-for="profile of data"
         :key="profile.id"
+        :to="`/profiles/${profile.id}`"
       >
         <UCard class="border border-neutral-500 size-52 flex items-center justify-center">
           <div class="grid grid-rows-2 place-items-center gap-y-3">
             <p class="text-xl">{{ profile.name }}</p>
           </div>
         </UCard>
-      </button>
+      </NuxtLink>
 
       <NuxtLink
         class="hover:scale-105 duration-200"
@@ -70,7 +72,7 @@ async function handleExport() {
       <UButton
         size="lg"
         variant="outline"
-        @click="isImportConfirmationModalOpen = true"
+        @click="importConfirmationModalOpen = true"
       >
         <template #leading>
           <IDownload class="size-5" />
@@ -90,7 +92,7 @@ async function handleExport() {
       </UButton>
     </div>
 
-    <UModal v-model="isImportConfirmationModalOpen">
+    <UModal v-model="importConfirmationModalOpen">
       <UCard>
         <div class="space-y-4">
           <h3 class="font-semibold text-xl text-center text-balance">
@@ -105,7 +107,7 @@ async function handleExport() {
           <div class="grid grid-cols-2 gap-4">
             <UButton
               variant="soft"
-              @click="isImportConfirmationModalOpen = false"
+              @click="importConfirmationModalOpen = false"
               block
             >
               Annuler
@@ -113,7 +115,7 @@ async function handleExport() {
             <UButton
               @click="
                 () => {
-                  isImportConfirmationModalOpen = false
+                  importConfirmationModalOpen = false
                   handleImport()
                 }
               "
