@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { z } from 'zod'
 import type { FormSubmitEvent } from '#ui/types'
+import { invoke } from '@tauri-apps/api/core'
 
 const schema = z.object({
   name: z
@@ -17,7 +18,9 @@ const state = reactive<Values>({
 
 async function handleSubmit(event: FormSubmitEvent<Values>) {
   event.preventDefault()
-  console.log(event.data)
+
+  const response = await invoke('create_profile_handler', { name: event.data.name })
+  console.log(response)
 }
 </script>
 

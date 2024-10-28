@@ -23,3 +23,7 @@ serde = { version = "1.0", features = ["derive"] }
 log = "0.4"
 tauri = { version = "2.0.6" }
 tauri-plugin-log = "2.0.0-rc"
+diesel = { version = "2.2.0", features = ["sqlite", "returning_clauses_for_sqlite_3_35", "chrono"] }
+diesel_migrations = "2.2.0"
+dotenvy = "0.15"
+chrono = { version = "0.4.38", features = ["serde"] }
