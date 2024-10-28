@@ -1,21 +1,21 @@
 # 🚗 AutoTrack
 
-> Simply track your car repairs!
+_Traquez la maintenance de vos véhicules en un clic !_
 
-## About:
+## À propos :
 
-AutoTrack allow you to track your car repairs:
+AutoTrack vous permet de suivre la maintenance de vos véhicules :
 
-- ➕ Add a vehicle to your profile
-- 🔩 Specify the repairs you have made
-- 📓 Generate a service book
-- ⏲️ Be alerted to overhauls that need to be made
-- 🚨 Do not miss your technical control
+- [x] ➕ Ajoutez un véhicule à votre profil
+- [x] 🔩 Indiquez les réparations effectuées
+- [x] 📓 Générez un carnet d'entretien
+- [x] ⏲️ Soyez alertés de l'entretien périodique à faire
+- [x] 🚨 Ne manquez pas vos contrôles techniques
 
-## Guides:
+## Guide d'utilisation :
 
-> Coming soon ⏳
+> À venir ⏳
 
-## Releases:
+## Publications :
 
-> Coming soon ⏳
+> À venir ⏳
