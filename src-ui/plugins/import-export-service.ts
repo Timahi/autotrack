@@ -21,7 +21,7 @@ export default defineNuxtPlugin(() => {
             reject('Opération annulée')
           }
 
-          await invoke<void>('import_database_to_path_handler', { path })
+          await invoke<void>('import_database_to_path_command', { path })
           resolve()
         } catch (error) {
           reject(error)
@@ -45,7 +45,7 @@ export default defineNuxtPlugin(() => {
             reject('Opération annulée')
           }
 
-          await invoke<void>('export_database_to_path_handler', { path })
+          await invoke<void>('export_database_to_path_command', { path })
           resolve()
         } catch (error) {
           reject(error)

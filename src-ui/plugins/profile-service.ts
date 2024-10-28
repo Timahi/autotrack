@@ -7,7 +7,7 @@ export default defineNuxtPlugin(() => {
     async getAll() {
       return new Promise<Profile[]>(async (resolve, reject) => {
         try {
-          const data = await invoke<any[]>('get_profiles_handler')
+          const data = await invoke<any[]>('get_profiles_command')
           resolve(data.map((p) => Profile.fromJSON(p)))
         } catch (error) {
           reject(error)
@@ -18,7 +18,7 @@ export default defineNuxtPlugin(() => {
     async create({ name }: z.infer<typeof this.schemas.create>) {
       return new Promise<Profile>(async (resolve, reject) => {
         try {
-          const data = await invoke<any>('create_profile_handler', { name })
+          const data = await invoke<any>('create_profile_command', { name })
           resolve(Profile.fromJSON(data))
         } catch (error) {
           reject(error)

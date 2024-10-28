@@ -42,15 +42,15 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            import_database_to_path_handler, export_database_to_path_handler,
-            get_profiles_handler, create_profile_handler
+            import_database_to_path_command, export_database_to_path_command,
+            get_profiles_command, create_profile_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 
 #[tauri::command]
-fn import_database_to_path_handler(app_handle: AppHandle, path: String) -> Result<(), String> {
+fn import_database_to_path_command(app_handle: AppHandle, path: String) -> Result<(), String> {
     let db_path = PathBuf::from(get_database_url(app_handle.path().app_local_data_dir().unwrap()));
     let backup_db_path = app_handle.path().temp_dir().unwrap().join("backup_autotrack.db");
 
@@ -79,7 +79,7 @@ fn import_database_to_path_handler(app_handle: AppHandle, path: String) -> Resul
 
 
 #[tauri::command]
-fn export_database_to_path_handler(app_handle: AppHandle, path: String) -> Result<(),
+fn export_database_to_path_command(app_handle: AppHandle, path: String) -> Result<(),
     String> {
     let db_path = get_database_url(app_handle.path().app_local_data_dir().unwrap());
 
@@ -93,7 +93,7 @@ fn export_database_to_path_handler(app_handle: AppHandle, path: String) -> Resul
 }
 
 #[tauri::command]
-fn get_profiles_handler(app_state: State<'_, Mutex<AppState>>) -> Result<Vec<Profile>, String> {
+fn get_profiles_command(app_state: State<'_, Mutex<AppState>>) -> Result<Vec<Profile>, String> {
     let mut state = app_state.lock().unwrap();
     let mut conn = &mut state.db.conn;
 
@@ -101,7 +101,7 @@ fn get_profiles_handler(app_state: State<'_, Mutex<AppState>>) -> Result<Vec<Pro
 }
 
 #[tauri::command]
-fn create_profile_handler(app_state: State<'_, Mutex<AppState>>, name: String) -> Result<Profile,
+fn create_profile_command(app_state: State<'_, Mutex<AppState>>, name: String) -> Result<Profile,
     String> {
     let new_profile = NewProfile { name: &name, created_at: &Utc::now().naive_utc(), updated_at: &Utc::now().naive_utc() };
     let mut state = app_state.lock().unwrap();
