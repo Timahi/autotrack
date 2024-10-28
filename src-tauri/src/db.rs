@@ -37,7 +37,7 @@ fn get_database_url(app_local_data_dir: PathBuf) -> String {
     if cfg!(debug_assertions) {
         env::var("DATABASE_URL").expect("DATABASE_URL non défini")
     } else {
-        let db_path = app_local_data_dir.join("database.sqlite");
+        let db_path = app_local_data_dir.join("db.sqlite");
         std::fs::create_dir_all(app_local_data_dir).expect("Erreur lors de la création de la base de données");
         String::from(db_path.to_str().unwrap())
     }
