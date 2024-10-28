@@ -1,7 +1,38 @@
 <script lang="ts" setup>
-const { $profileService } = useNuxtApp()
+const { $profileService, $importExportService } = useNuxtApp()
 
-const { data } = useAsyncData('profiles', () => $profileService.getAll())
+const { data, refresh } = useAsyncData('profiles', () => $profileService.getAll())
+
+const toast = useToast()
+
+const isImportConfirmationModalOpen = ref(false)
+
+async function handleImport() {
+  try {
+    await $importExportService.import()
+    toast.add({ id: 'import_success', title: 'Données importées avec succès !', color: 'green' })
+    await refresh()
+  } catch (error) {
+    if (typeof error === 'string') {
+      toast.add({ id: 'import_fail', title: error })
+    } else {
+      toast.add({ id: 'import_fail', title: 'Une erreur est survenue' })
+    }
+  }
+}
+
+async function handleExport() {
+  try {
+    await $importExportService.export()
+    toast.add({ id: 'export_success', title: 'Données exportées avec succès !', color: 'green' })
+  } catch (error) {
+    if (typeof error === 'string') {
+      toast.add({ id: 'export_fail', title: error })
+    } else {
+      toast.add({ id: 'export_fail', title: 'Une erreur est survenue' })
+    }
+  }
+}
 </script>
 
 <template>
@@ -35,10 +66,11 @@ const { data } = useAsyncData('profiles', () => $profileService.getAll())
       </NuxtLink>
     </div>
 
-    <div class="flex items-center gap-6">
+    <div class="grid grid-cols-2 gap-6">
       <UButton
         size="lg"
         variant="outline"
+        @click="isImportConfirmationModalOpen = true"
       >
         <template #leading>
           <IDownload class="size-5" />
@@ -49,6 +81,7 @@ const { data } = useAsyncData('profiles', () => $profileService.getAll())
       <UButton
         size="lg"
         variant="outline"
+        @click="handleExport"
       >
         <template #leading>
           <IUpload class="size-5" />
@@ -56,5 +89,41 @@ const { data } = useAsyncData('profiles', () => $profileService.getAll())
         Exporter la sauvegarde
       </UButton>
     </div>
+
+    <UModal v-model="isImportConfirmationModalOpen">
+      <UCard>
+        <div class="space-y-4">
+          <h3 class="font-semibold text-xl text-center text-balance">
+            Vérifiez que vous avez bien exporté vos données actuelles !
+          </h3>
+
+          <p class="text-neutral-400 text-sm font-thin flex items-center">
+            <IAlertTriangle class="size-4 mr-2" />
+            Les données non exportées seront écrasées
+          </p>
+
+          <div class="grid grid-cols-2 gap-4">
+            <UButton
+              variant="soft"
+              @click="isImportConfirmationModalOpen = false"
+              block
+            >
+              Annuler
+            </UButton>
+            <UButton
+              @click="
+                () => {
+                  isImportConfirmationModalOpen = false
+                  handleImport()
+                }
+              "
+              block
+            >
+              Poursuivre
+            </UButton>
+          </div>
+        </div>
+      </UCard>
+    </UModal>
   </div>
 </template>

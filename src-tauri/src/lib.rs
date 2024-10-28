@@ -1,10 +1,10 @@
-use crate::db::Database;
+use crate::db::{get_database_url, Database};
 use crate::models::{NewProfile, Profile};
 use crate::repositories::{create_profile, get_profiles};
-use chrono::{NaiveDateTime, Utc};
-use diesel::SqliteConnection;
-use serde::Serialize;
-use std::sync::{Arc, Mutex};
+use chrono::Utc;
+use std::fs;
+use std::path::PathBuf;
+use std::sync::Mutex;
 use tauri::{AppHandle, Manager, State};
 
 mod schema;
@@ -12,10 +12,25 @@ mod db;
 mod models;
 mod repositories;
 
+struct AppState {
+    db: Database,
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
+            match Database::new(&app.handle()) {
+                Ok(db) => {
+                    app.manage(Mutex::new(AppState {
+                        db
+                    }));
+                }
+                Err(err) => panic!("{}", err)
+            }
+
+
             if cfg!(debug_assertions) {
                 app.handle().plugin(
                     tauri_plugin_log::Builder::default()
@@ -24,28 +39,73 @@ pub fn run() {
                 )?;
             }
 
-            let database = Database::new(&app.handle());
-            app.manage(database);
-
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![get_profiles_handler, create_profile_handler])
+        .invoke_handler(tauri::generate_handler![
+            import_database_to_path_handler, export_database_to_path_handler,
+            get_profiles_handler, create_profile_handler
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 
 #[tauri::command]
-fn get_profiles_handler(db: State<Database>) -> Result<Vec<Profile>, String> {
-    let mut conn = db.conn.lock().map_err(|_| "Échec lors de la récupération de la base de données".to_string())?;
+fn import_database_to_path_handler(app_handle: AppHandle, path: String) -> Result<(), String> {
+    let db_path = PathBuf::from(get_database_url(app_handle.path().app_local_data_dir().unwrap()));
+    let backup_db_path = app_handle.path().temp_dir().unwrap().join("backup_autotrack.db");
+
+    if let Err(_) = fs::copy(&db_path, &backup_db_path) {
+        return Err("Échec lors de l'importation des données".to_string());
+    }
+
+    match fs::copy(&path, &db_path) {
+        Ok(_) => {
+            match Database::new(&app_handle) {
+                Ok(db) => {
+                    app_handle.manage(Mutex::new(AppState { db }));
+                    Ok(())
+                }
+                Err(_) => {
+                    if let Err(_) = fs::copy(&backup_db_path, &db_path) {
+                        return Err("Erreur lors de la restauration de l'ancienne base de données".to_string());
+                    }
+                    Err("Erreur lors de l'importation de la base de données".to_string())
+                }
+            }
+        }
+        Err(_) => Err("Échec lors de l'importation des données".to_string()),
+    }
+}
+
+
+#[tauri::command]
+fn export_database_to_path_handler(app_handle: AppHandle, path: String) -> Result<(),
+    String> {
+    let db_path = get_database_url(app_handle.path().app_local_data_dir().unwrap());
+
+    match fs::copy(PathBuf::from(&db_path), PathBuf::from(path.to_string())) {
+        Ok(_) => Ok(()),
+        Err(e) => {
+            eprintln!("Erreur lors de la copie de la base de données : {:?}", e);
+            Err("Échec lors de l'exportation des données.".to_string())
+        }
+    }
+}
+
+#[tauri::command]
+fn get_profiles_handler(app_state: State<'_, Mutex<AppState>>) -> Result<Vec<Profile>, String> {
+    let mut state = app_state.lock().unwrap();
+    let mut conn = &mut state.db.conn;
 
     get_profiles(&mut conn)
 }
 
 #[tauri::command]
-fn create_profile_handler(db: State<Database>, name: String) -> Result<Profile, String> {
+fn create_profile_handler(app_state: State<'_, Mutex<AppState>>, name: String) -> Result<Profile,
+    String> {
     let new_profile = NewProfile { name: &name, created_at: &Utc::now().naive_utc(), updated_at: &Utc::now().naive_utc() };
-
-    let mut conn = db.conn.lock().map_err(|_| "Échec lors de la récupération de la base de données".to_string())?;
+    let mut state = app_state.lock().unwrap();
+    let mut conn = &mut state.db.conn;
 
     create_profile(&mut conn, new_profile)
 }
