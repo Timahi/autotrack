@@ -1,6 +1,6 @@
 use crate::db::Database;
 use crate::models::{NewProfile, Profile};
-use crate::repositories::create_profile;
+use crate::repositories::{create_profile, get_profiles};
 use chrono::{NaiveDateTime, Utc};
 use diesel::SqliteConnection;
 use serde::Serialize;
@@ -29,9 +29,16 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![create_profile_handler])
+        .invoke_handler(tauri::generate_handler![get_profiles_handler, create_profile_handler])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+#[tauri::command]
+fn get_profiles_handler(db: State<Database>) -> Result<Vec<Profile>, String> {
+    let mut conn = db.conn.lock().map_err(|_| "Échec lors de la récupération de la base de données".to_string())?;
+
+    get_profiles(&mut conn)
 }
 
 #[tauri::command]

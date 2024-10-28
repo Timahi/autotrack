@@ -1,14 +1,10 @@
 <script lang="ts" setup>
 import { z } from 'zod'
 import type { FormSubmitEvent } from '#ui/types'
-import { invoke } from '@tauri-apps/api/core'
 
-const schema = z.object({
-  name: z
-    .string()
-    .min(1, 'Le nom du profil est obligatoire')
-    .max(200, 'Le nom du profil ne peut excéder 200 caractères'),
-})
+const { $profileService } = useNuxtApp()
+
+const schema = $profileService.schemas.create
 
 type Values = z.infer<typeof schema>
 
@@ -16,11 +12,21 @@ const state = reactive<Values>({
   name: '',
 })
 
+const toast = useToast()
+
 async function handleSubmit(event: FormSubmitEvent<Values>) {
   event.preventDefault()
 
-  const response = await invoke('create_profile_handler', { name: event.data.name })
-  console.log(response)
+  try {
+    await $profileService.create(event.data)
+    await navigateTo('/')
+  } catch (error) {
+    if (typeof error === 'string') {
+      toast.add({ id: 'create_post_error', title: error })
+    } else {
+      toast.add({ id: 'create_post_error', title: 'Une erreur est survenue' })
+    }
+  }
 }
 </script>
 

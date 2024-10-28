@@ -19,4 +19,8 @@ export default defineNuxtConfig({
   lucide: {
     namePrefix: 'I',
   },
+
+  colorMode: {
+    preference: 'dark',
+  },
 })
