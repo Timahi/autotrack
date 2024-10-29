@@ -9,47 +9,14 @@ export default class Profile {
   static fromJSON({
     id,
     name,
-    createdAt,
-    updatedAt,
+    created_at,
+    updated_at,
   }: {
     id: number
     name: string
-    createdAt: string
-    updatedAt: string
+    created_at: string
+    updated_at: string
   }): Profile {
-    return new Profile(id, name, new Date(createdAt), new Date(updatedAt))
-  }
-
-  static fromString(text: string): Profile {
-    const parsed = JSON.parse(text)
-
-    if (
-      typeof parsed.id !== 'number' ||
-      typeof parsed.name !== 'string' ||
-      typeof parsed.createdAt !== 'string' ||
-      typeof parsed.updatedAt !== 'string'
-    ) {
-      throw new Error('Invalid data')
-    }
-
-    return this.fromJSON(parsed)
-  }
-
-  toJson(): {
-    id: number
-    name: string
-    createdAt: string
-    updatedAt: string
-  } {
-    return {
-      id: this.id,
-      name: this.name,
-      createdAt: this.createdAt.toString(),
-      updatedAt: this.updatedAt.toString(),
-    }
-  }
-
-  toString(): string {
-    return JSON.stringify(this.toJson())
+    return new Profile(id, name, new Date(created_at), new Date(updated_at))
   }
 }

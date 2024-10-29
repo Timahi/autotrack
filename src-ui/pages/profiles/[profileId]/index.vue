@@ -20,6 +20,7 @@ const { profile } = storeToRefs(selectedProfile())
         Retour à la liste
       </UButton>
     </div>
-    <h1 class="text-4xl font-semibold">{{ profile!.name }}</h1>
+    <h1 class="text-4xl font-semibold">{{ profile.name }}</h1>
+    <p>{{ profile.createdAt }}</p>
   </div>
 </template>
