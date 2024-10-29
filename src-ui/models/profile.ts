@@ -17,6 +17,9 @@ export default class Profile {
     created_at: string
     updated_at: string
   }): Profile {
+    created_at += 'Z'
+    updated_at += 'Z'
+
     return new Profile(id, name, new Date(created_at), new Date(updated_at))
   }
 }

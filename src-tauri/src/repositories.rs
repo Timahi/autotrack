@@ -39,16 +39,22 @@ pub fn create_profile(
 pub fn update_profile(
     conn: &mut SqliteConnection,
     profile_id: i32,
-    new_profile: NewProfile,
+    edit_profile: EditProfile,
 ) -> Result<Profile, String> {
-    diesel::update(profiles.find(profile_id))
+    match diesel::update(profiles.find(profile_id))
         .set((
-            name.eq(new_profile.name),
+            name.eq(edit_profile.name),
             updated_at.eq(Utc::now().naive_utc()),
         ))
         .returning(Profile::as_returning())
         .get_result(conn)
-        .map_err(|_| "Échec lors de la mise à jour du profil".to_string())
+    {
+        Ok(profile) => Ok(profile),
+        Err(Error::DatabaseError(DatabaseErrorKind::UniqueViolation, _)) => {
+            Err("Un profil avec ce nom existe déjà".to_string())
+        }
+        Err(_) => Err("Échec lors de la mise à jour du profil".to_string()),
+    }
 }
 
 pub fn delete_profile(conn: &mut SqliteConnection, profile_id: i32) -> Result<usize, String> {

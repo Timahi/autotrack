@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 definePageMeta({
   middleware: ['profile-middleware'],
-  layout: 'profiles-layout',
+  layout: 'profile-layout',
 })
 
 const { profile } = storeToRefs(selectedProfile())

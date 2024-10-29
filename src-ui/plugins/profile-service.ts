@@ -37,8 +37,26 @@ export default defineNuxtPlugin(() => {
       })
     },
 
+    async update(profileId: number, { name }: z.infer<typeof this.schemas.update>) {
+      return new Promise<Profile>(async (resolve, reject) => {
+        try {
+          const data = await invoke<any>('update_profile_command', { profileId, name })
+          resolve(Profile.fromJSON(data))
+        } catch (error) {
+          reject(error)
+        }
+      })
+    },
+
     schemas: {
       create: z.object({
+        name: z
+          .string()
+          .min(1, 'Le nom du profil est obligatoire')
+          .max(200, 'Le nom du profil ne peut excéder 200 caractères'),
+      }),
+
+      update: z.object({
         name: z
           .string()
           .min(1, 'Le nom du profil est obligatoire')

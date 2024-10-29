@@ -22,7 +22,7 @@ pub struct NewProfile<'a> {
 
 #[derive(AsChangeset)]
 #[diesel(table_name = crate::schema::profiles)]
-pub struct UpdateProfile<'a> {
+pub struct EditProfile<'a> {
     pub name: &'a str,
     pub updated_at: &'a NaiveDateTime,
 }
