@@ -45,7 +45,10 @@ async function handleExport() {
       id="profile-list"
       class="relative w-full max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl"
     >
-      <div class="flex items-center gap-6 overflow-x-auto whitespace-nowrap p-6">
+      <div
+        class="flex items-center gap-6 overflow-x-auto whitespace-nowrap p-6"
+        :class="{ 'justify-center': !profiles?.length }"
+      >
         <!--suppress HtmlUnknownTarget -->
         <NuxtLink
           class="hover:scale-105 duration-200"
