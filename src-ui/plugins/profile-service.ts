@@ -48,6 +48,17 @@ export default defineNuxtPlugin(() => {
       })
     },
 
+    async delete(profileId: number) {
+      return new Promise<void>(async (resolve, reject) => {
+        try {
+          await invoke('delete_profile_command', { profileId })
+          resolve()
+        } catch (error) {
+          reject(error)
+        }
+      })
+    },
+
     schemas: {
       create: z.object({
         name: z

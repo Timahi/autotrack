@@ -53,6 +53,23 @@ async function handleSubmit(event: FormSubmitEvent<Values>) {
     }
   }
 }
+
+const deleteModalOpen = ref(false)
+
+async function handleDelete() {
+  try {
+    await $profileService.delete(profile.value.id)
+    toast.add({ id: 'profile-delete-success', title: 'Le profil a été supprimé', color: 'green' })
+    await refreshNuxtData(['profiles'])
+    await navigateTo('/')
+  } catch (error) {
+    if (typeof error === 'string') {
+      toast.add({ id: 'profile-delete-error', title: error })
+    } else {
+      toast.add({ id: 'profile-delete-error', title: 'Une erreur est survenue' })
+    }
+  }
+}
 </script>
 
 <template>
@@ -84,15 +101,66 @@ async function handleSubmit(event: FormSubmitEvent<Values>) {
           type="submit"
           :disabled="state.name === profile.name"
           block
-          >Mettre à jour le profil</UButton
-        >
+          >Mettre à jour le profil
+        </UButton>
       </UForm>
 
       <template #footer>
-        <p class="text-sm text-neutral-500">
-          Dernière modification le {{ updatedAtDate }} à {{ updatedAtTime }}
-        </p>
+        <div class="flex items-center justify-between">
+          <p class="text-sm text-neutral-500">
+            Dernière modification le {{ updatedAtDate }} à {{ updatedAtTime }}
+          </p>
+          <UTooltip
+            text="Supprimer le profil"
+            :popper="{ arrow: true }"
+          >
+            <UButton
+              variant="soft"
+              size="sm"
+              square
+              @click="deleteModalOpen = true"
+            >
+              <ITrash2 class="size-5" />
+            </UButton>
+          </UTooltip>
+        </div>
       </template>
     </UCard>
+
+    <UModal v-model="deleteModalOpen">
+      <UCard>
+        <div class="space-y-4">
+          <h3 class="font-semibold text-xl text-center text-balance truncate">
+            Êtes-vous sûr de vouloir supprimer «&nbsp;{{ profile.name }}&nbsp;» ?
+          </h3>
+
+          <p class="text-neutral-400 text-sm font-thin flex items-center">
+            <IAlertTriangle class="size-4 mr-2" />
+            Les données non exportées seront perdues
+          </p>
+
+          <div class="grid grid-cols-2 gap-4">
+            <UButton
+              variant="soft"
+              @click="deleteModalOpen = false"
+              block
+            >
+              Annuler
+            </UButton>
+            <UButton
+              @click="
+                () => {
+                  deleteModalOpen = false
+                  handleDelete()
+                }
+              "
+              block
+            >
+              Confirmer
+            </UButton>
+          </div>
+        </div>
+      </UCard>
+    </UModal>
   </div>
 </template>

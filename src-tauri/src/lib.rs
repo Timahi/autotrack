@@ -1,6 +1,6 @@
 use crate::db::{get_database_url, Database};
 use crate::models::{EditProfile, NewProfile, Profile};
-use crate::repositories::{create_profile, get_profile_by_id, get_profiles, update_profile};
+use crate::repositories::{create_profile, delete_profile, get_profile_by_id, get_profiles, update_profile};
 use chrono::Utc;
 use std::fs;
 use std::path::PathBuf;
@@ -43,7 +43,7 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             import_database_to_path_command, export_database_to_path_command,
-            get_profiles_command, get_profile_by_id_command, create_profile_command, update_profile_command
+            get_profiles_command, get_profile_by_id_command, create_profile_command, update_profile_command, delete_profile_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -126,4 +126,13 @@ fn update_profile_command(app_state: State<'_, Mutex<AppState>>, profile_id: i32
     let conn = &mut state.db.conn;
 
     update_profile(conn, profile_id, edit_profile)
+}
+
+#[tauri::command]
+fn delete_profile_command(app_state: State<'_, Mutex<AppState>>, profile_id: i32) -> Result<(),
+    String> {
+    let mut state = app_state.lock().unwrap();
+    let conn = &mut state.db.conn;
+
+    delete_profile(conn, profile_id)
 }

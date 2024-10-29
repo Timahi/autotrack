@@ -57,8 +57,10 @@ pub fn update_profile(
     }
 }
 
-pub fn delete_profile(conn: &mut SqliteConnection, profile_id: i32) -> Result<usize, String> {
-    diesel::delete(profiles.find(profile_id))
-        .execute(conn)
-        .map_err(|_| "Échec lors de la suppression du profil".to_string())
+pub fn delete_profile(conn: &mut SqliteConnection, profile_id: i32) -> Result<(), String> {
+    match diesel::delete(profiles.find(profile_id))
+        .execute(conn) {
+        Ok(_) => Ok(()),
+        Err(_) => Err("Échec lors de la suppression du profil".to_string())
+    }
 }
