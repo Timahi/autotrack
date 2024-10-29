@@ -45,7 +45,10 @@ async function handleExport() {
       id="profile-list"
       class="relative w-full max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl"
     >
-      <div class="flex items-center gap-6 overflow-x-auto whitespace-nowrap p-6">
+      <div
+        class="flex items-center gap-6 overflow-x-scroll whitespace-nowrap p-6"
+        :class="{ 'justify-center': !profiles?.length }"
+      >
         <!--suppress HtmlUnknownTarget -->
         <NuxtLink
           class="hover:scale-105 duration-200"
@@ -60,6 +63,13 @@ async function handleExport() {
           </UCard>
         </NuxtLink>
 
+        <UDivider
+          orientation="vertical"
+          size="sm"
+          class="h-52"
+          v-if="profiles?.length"
+        />
+
         <NuxtLink
           class="hover:scale-105 duration-200"
           to="/profiles/create"
@@ -73,33 +83,34 @@ async function handleExport() {
             </div>
           </UCard>
         </NuxtLink>
+        <button
+          class="hover:scale-105 duration-200"
+          @click="importConfirmationModalOpen = true"
+        >
+          <UCard
+            class="border border-dashed border-neutral-500 size-52 flex items-center justify-center"
+          >
+            <div class="grid grid-rows-2 place-items-center gap-y-3">
+              <p class="text-xl text-wrap">Importer une sauvegarde</p>
+              <IDownload class="size-10" />
+            </div>
+          </UCard>
+        </button>
+        <button
+          class="hover:scale-105 duration-200"
+          @click="handleExport"
+          v-if="profiles?.length"
+        >
+          <UCard
+            class="border border-dashed border-neutral-500 size-52 flex items-center justify-center"
+          >
+            <div class="grid grid-rows-2 place-items-center gap-y-3">
+              <p class="text-xl text-wrap">Exporter les données</p>
+              <IUpload class="size-10" />
+            </div>
+          </UCard>
+        </button>
       </div>
-    </div>
-
-    <div class="grid grid-cols-2 gap-6">
-      <UButton
-        size="lg"
-        variant="outline"
-        @click="importConfirmationModalOpen = true"
-        block
-      >
-        <template #leading>
-          <IDownload class="size-5" />
-        </template>
-        Importer une sauvegarde
-      </UButton>
-
-      <UButton
-        size="lg"
-        variant="outline"
-        @click="handleExport"
-        block
-      >
-        <template #leading>
-          <IUpload class="size-5" />
-        </template>
-        Exporter les données
-      </UButton>
     </div>
 
     <UModal v-model="importConfirmationModalOpen">
