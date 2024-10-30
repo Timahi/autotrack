@@ -84,12 +84,11 @@ pub fn get_vehicles(conn: &mut SqliteConnection, _profile_id: i32) -> Result<Vec
     }
 }
 
-pub fn get_vehicle_by_id(conn: &mut SqliteConnection, _profile_id: i32, vehicle_id: i32) -> Result<Vehicle, String> {
+pub fn get_vehicle_by_id(conn: &mut SqliteConnection, vehicle_id: i32) -> Result<Vehicle, String> {
     use crate::schema::vehicles::dsl::*;
 
     match vehicles
         .find(vehicle_id)
-        .filter(profile_id.eq(_profile_id))
         .get_result(conn)
     {
         Ok(v) => Ok(v),

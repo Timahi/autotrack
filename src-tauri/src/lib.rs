@@ -144,11 +144,11 @@ fn get_vehicles_command(app_state: State<'_, Mutex<AppState>>, profile_id: i32) 
 }
 
 #[tauri::command]
-fn get_vehicle_by_id_command(app_state: State<'_, Mutex<AppState>>, profile_id: i32, vehicle_id: i32) -> Result<Vehicle, String> {
+fn get_vehicle_by_id_command(app_state: State<'_, Mutex<AppState>>, vehicle_id: i32) -> Result<Vehicle, String> {
     let mut state = app_state.lock().unwrap();
     let conn = &mut state.db.conn;
 
-    get_vehicle_by_id(conn, profile_id, vehicle_id)
+    get_vehicle_by_id(conn, vehicle_id)
 }
 
 #[tauri::command]

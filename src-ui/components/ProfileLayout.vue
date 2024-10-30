@@ -3,7 +3,7 @@ import type { DropdownItem } from '#ui/types'
 
 const { $profileService, $importExportService } = useNuxtApp()
 
-const { profile } = storeToRefs(selectedProfile())
+const profile = await useProfile()
 const { data: profiles } = useAsyncData('profiles', () => $profileService.getAll())
 
 const filteredProfiles = computed(() =>
@@ -127,7 +127,7 @@ const links = computed(
           size="lg"
           class="w-56 justify-between"
         >
-          <p class="text-base truncate">{{ profile!.name }}</p>
+          <p class="text-base truncate">{{ profile.name }}</p>
           <IChevronDown class="size-6 shrink-0" />
         </UButton>
       </UDropdown>

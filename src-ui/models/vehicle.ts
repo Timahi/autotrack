@@ -7,8 +7,8 @@ export class Vehicle {
     public odometerUpdatedAt: Date,
     public registration: string,
     public registrationYear: string,
-    public serialNumber: string | null | undefined,
-    public description: string | null | undefined,
+    public serialNumber: string | null,
+    public description: string | null,
     public profileId: number,
     public createdAt: Date,
     public updatedAt: Date
@@ -19,41 +19,41 @@ export class Vehicle {
     brand,
     model,
     odometer,
-    odometerUpdatedAt,
+    odometer_updated_at,
     registration,
-    registrationYear,
-    serialNumber,
+    registration_year,
+    serial_number,
     description,
-    profileId,
-    createdAt,
-    updatedAt,
+    profile_id,
+    created_at,
+    updated_at,
   }: {
     id: number
     brand: string
     model: string
     odometer: number
-    odometerUpdatedAt: Date
+    odometer_updated_at: string
     registration: string
-    registrationYear: string
-    serialNumber: string | null | undefined
-    description: string | null | undefined
-    profileId: number
-    createdAt: Date
-    updatedAt: Date
+    registration_year: string
+    serial_number: string | null
+    description: string | null
+    profile_id: number
+    created_at: string
+    updated_at: string
   }) {
     return new Vehicle(
       id,
       brand,
       model,
       odometer,
-      odometerUpdatedAt,
+      new Date(odometer_updated_at + 'Z'),
       registration,
-      registrationYear,
-      serialNumber,
+      registration_year,
+      serial_number,
       description,
-      profileId,
-      createdAt,
-      updatedAt
+      profile_id,
+      new Date(created_at + 'Z'),
+      new Date(updated_at + 'Z')
     )
   }
 }
@@ -132,13 +132,13 @@ export class NewVehicle {
 
 export class EditVehicle {
   private constructor(
-    public brand: string,
-    public model: string,
-    public odometer: number,
-    public registration: string,
-    public registrationYear: number,
-    public profileId: number,
     public updatedAt: Date,
+    public brand?: string,
+    public model?: string,
+    public odometer?: number,
+    public registration?: string,
+    public registrationYear?: number,
+    public profileId?: number,
     public odometerUpdatedAt?: Date,
     public serialNumber?: string,
     public description?: string
@@ -156,25 +156,25 @@ export class EditVehicle {
     profileId,
     updatedAt,
   }: {
-    brand: string
-    model: string
-    odometer: number
+    brand?: string
+    model?: string
+    odometer?: number
     odometerUpdatedAt?: Date
-    registration: string
-    registrationYear: number
+    registration?: string
+    registrationYear?: number
     serialNumber?: string
     description?: string
-    profileId: number
+    profileId?: number
     updatedAt: Date
   }) {
     return new EditVehicle(
+      updatedAt,
       brand,
       model,
       odometer,
       registration,
       registrationYear,
       profileId,
-      updatedAt,
       odometerUpdatedAt,
       serialNumber,
       description
@@ -186,13 +186,13 @@ export class EditVehicle {
       brand: this.brand,
       model: this.model,
       odometer: this.odometer,
-      odometerUpdatedAt: this.odometerUpdatedAt?.toISOString().slice(0, -1),
+      odometer_updated_at: this.odometerUpdatedAt?.toISOString().slice(0, -1),
       registration: this.registration,
-      registrationYear: this.registrationYear,
-      serialNumber: this.serialNumber,
+      registration_year: this.registrationYear,
+      serial_number: this.serialNumber,
       description: this.description,
-      profileId: this.profileId,
-      updatedAt: this.updatedAt.toISOString().slice(0, -1),
+      profile_id: this.profileId,
+      updated_at: this.updatedAt.toISOString().slice(0, -1),
     }
   }
 }

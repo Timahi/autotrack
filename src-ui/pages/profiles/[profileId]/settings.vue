@@ -2,28 +2,10 @@
 import { z } from 'zod'
 import type { FormSubmitEvent } from '#ui/types'
 
-definePageMeta({
-  middleware: ['profile-middleware'],
-  layout: 'profile-layout',
-})
+const profile = await useProfile()
 
-const { profile } = storeToRefs(selectedProfile())
-const { setProfile } = selectedProfile()
-
-const dateFormater = Intl.DateTimeFormat('fr-FR', {
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-  timeZone: 'Europe/Paris',
-})
-const timeFormater = Intl.DateTimeFormat('fr-FR', {
-  hour: '2-digit',
-  minute: '2-digit',
-  timeZone: 'Europe/Paris',
-})
-
-const updatedAtDate = computed(() => dateFormater.format(profile.value.updatedAt))
-const updatedAtTime = computed(() => timeFormater.format(profile.value.updatedAt))
+const updatedAtDate = computed(() => formatDate(profile.value.updatedAt))
+const updatedAtTime = computed(() => formatTime(profile.value.updatedAt))
 
 const { $profileService } = useNuxtApp()
 
@@ -47,14 +29,14 @@ const noChanges = computed(() => {
 
 const toast = useToast()
 const submitLoading = ref(false)
+
 async function handleSubmit(event: FormSubmitEvent<Values>) {
   event.preventDefault()
   submitLoading.value = true
   try {
-    const result = await $profileService.update(profile.value.id, event.data)
-    setProfile(result)
+    await $profileService.update(profile.value.id, event.data)
     toast.add({ id: 'profile-update-success', title: 'Le profil a été mis à jour', color: 'green' })
-    await refreshNuxtData(['profiles'])
+    await refreshNuxtData(['profiles', `profile-${profile.value.id}`])
   } catch (error) {
     if (typeof error === 'string') {
       toast.add({ id: 'profile-update-error', title: error })
@@ -63,7 +45,6 @@ async function handleSubmit(event: FormSubmitEvent<Values>) {
     }
   } finally {
     for (const key of Object.keys(state)) {
-      console.log(key)
       state[key as keyof typeof state] = undefined
     }
     submitLoading.value = false
@@ -78,7 +59,7 @@ async function handleDelete() {
   try {
     await $profileService.delete(profile.value.id)
     toast.add({ id: 'profile-delete-success', title: 'Le profil a été supprimé', color: 'green' })
-    await refreshNuxtData(['profiles'])
+    await refreshNuxtData(['profiles', `profile-${profile.value.id}`])
     await navigateTo('/')
   } catch (error) {
     if (typeof error === 'string') {
@@ -93,110 +74,111 @@ async function handleDelete() {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center">
-    <UCard class="w-full max-w-xl">
-      <template #header>
-        <h1 class="text-2xl font-semibold text-center truncate">
-          Modifier «&nbsp;{{ profile.name }}&nbsp;»
-        </h1>
-      </template>
+  <ProfileLayout>
+    <div class="min-h-screen flex flex-col items-center justify-center">
+      <UCard class="w-full max-w-xl">
+        <template #header>
+          <h1 class="text-2xl font-semibold text-center truncate">
+            Modifier «&nbsp;{{ profile.name }}&nbsp;»
+          </h1>
+        </template>
 
-      <UForm
-        :schema="schema"
-        :state="state"
-        @submit="handleSubmit"
-        class="space-y-4"
-      >
-        <UFormGroup
-          label="Nom du profil"
-          name="name"
+        <UForm
+          :schema="schema"
+          :state="state"
+          @submit="handleSubmit"
+          class="space-y-4"
         >
-          <div class="flex items-center gap-2">
-            <UInput
-              v-model="state.name"
-              :placeholder="profile.name"
-              class="flex-1"
-            />
-            <!--suppress PointlessBooleanExpressionJS -->
-            <UButton
-              color="white"
-              class="size-8"
-              @click="state.name = undefined"
-              :disabled="!state.name"
-            >
-              <IRotateCcw />
-            </UButton>
-          </div>
-        </UFormGroup>
-
-        <UButton
-          type="submit"
-          :disabled="noChanges"
-          :loading="submitLoading"
-          block
-        >
-          Mettre à jour
-        </UButton>
-      </UForm>
-
-      <template #footer>
-        <div class="flex items-center justify-between">
-          <p class="text-sm text-neutral-500">
-            Dernière modification le {{ updatedAtDate }} à {{ updatedAtTime }}
-          </p>
-          <UTooltip
-            text="Supprimer le profil"
-            :popper="{ arrow: true }"
+          <UFormGroup
+            label="Nom du profil"
+            name="name"
           >
-            <UButton
-              variant="soft"
-              size="sm"
-              square
-              @click="deleteModalOpen = true"
-            >
-              <ITrash2 class="size-5" />
-            </UButton>
-          </UTooltip>
-        </div>
-      </template>
-    </UCard>
+            <div class="flex items-center gap-2">
+              <UInput
+                v-model="state.name"
+                :placeholder="profile.name"
+                class="flex-1"
+              />
+              <!--suppress PointlessBooleanExpressionJS -->
+              <UButton
+                color="white"
+                class="size-8"
+                @click="state.name = undefined"
+                :disabled="!state.name"
+              >
+                <IRotateCcw />
+              </UButton>
+            </div>
+          </UFormGroup>
 
-    <UModal v-model="deleteModalOpen">
-      <UCard>
-        <div class="space-y-4">
-          <h3 class="font-semibold text-xl text-center text-balance truncate">
-            Êtes-vous sûr de vouloir supprimer «&nbsp;{{ profile.name }}&nbsp;» ?
-          </h3>
+          <UButton
+            type="submit"
+            :disabled="noChanges"
+            :loading="submitLoading"
+            block
+          >
+            Mettre à jour
+          </UButton>
+        </UForm>
 
-          <p class="text-neutral-400 text-sm flex items-center text-pretty">
-            <!--            <IAlertTriangle class="size-4 mr-2" />-->
-            Tous les véhicules présents dans «&nbsp;{{ profile.name }}&nbsp;» seront supprimés s'ils
-            n'ont pas été exportés.
-          </p>
-
-          <div class="grid grid-cols-2 gap-4">
-            <UButton
-              variant="soft"
-              @click="deleteModalOpen = false"
-              block
+        <template #footer>
+          <div class="flex items-center justify-between">
+            <p class="text-sm text-neutral-500">
+              Dernière modification le {{ updatedAtDate }} à {{ updatedAtTime }}
+            </p>
+            <UTooltip
+              text="Supprimer le profil"
+              :popper="{ arrow: true }"
             >
-              Annuler
-            </UButton>
-            <UButton
-              :loading="deleteLoading"
-              @click="
-                () => {
-                  deleteModalOpen = false
-                  handleDelete()
-                }
-              "
-              block
-            >
-              Confirmer
-            </UButton>
+              <UButton
+                variant="soft"
+                size="sm"
+                square
+                @click="deleteModalOpen = true"
+              >
+                <ITrash2 class="size-5" />
+              </UButton>
+            </UTooltip>
           </div>
-        </div>
+        </template>
       </UCard>
-    </UModal>
-  </div>
+
+      <UModal v-model="deleteModalOpen">
+        <UCard>
+          <div class="space-y-4">
+            <h3 class="font-semibold text-xl text-center text-balance truncate">
+              Êtes-vous sûr de vouloir supprimer «&nbsp;{{ profile.name }}&nbsp;» ?
+            </h3>
+
+            <p class="text-neutral-400 text-sm text-pretty">
+              Tous les véhicules présents dans «&nbsp;{{ profile.name }}&nbsp;» seront supprimés
+              s'ils n'ont pas été exportés.
+            </p>
+
+            <div class="grid grid-cols-2 gap-4">
+              <UButton
+                variant="soft"
+                @click="deleteModalOpen = false"
+                block
+              >
+                Annuler
+              </UButton>
+              <UButton
+                :loading="deleteLoading"
+                @click="
+                  () => {
+                    deleteModalOpen = false
+                    handleDelete()
+                  }
+                "
+                block
+              >
+                Confirmer
+              </UButton>
+            </div>
+          </div>
+        </UCard>
+      </UModal>
+    </div>
+  </ProfileLayout>
 </template>

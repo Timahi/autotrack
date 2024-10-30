@@ -2,15 +2,10 @@
 import { z } from 'zod'
 import type { FormSubmitEvent } from '#ui/types'
 
-definePageMeta({
-  middleware: 'profile-middleware',
-  layout: 'profile-layout',
-})
-
-const { profile } = storeToRefs(selectedProfile())
+const profile = await useProfile()
 const { $vehicleService } = useNuxtApp()
 
-const schema = $vehicleService.schemas.createAndUpdate
+const schema = $vehicleService.schemas.create
 
 type Values = z.infer<typeof schema>
 
@@ -45,86 +40,88 @@ async function handleSubmit(event: FormSubmitEvent<Values>) {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center">
-    <UCard class="w-full max-w-xl">
-      <template #header>
-        <h1 class="text-2xl font-semibold text-center">Créer un véhicule</h1>
-      </template>
+  <ProfileLayout>
+    <div class="min-h-screen flex flex-col items-center justify-center">
+      <UCard class="w-full max-w-xl">
+        <template #header>
+          <h1 class="text-2xl font-semibold text-center">Créer un véhicule</h1>
+        </template>
 
-      <UForm
-        :schema="schema"
-        :state="state"
-        @submit="handleSubmit"
-        class="space-y-4"
-      >
-        <UFormGroup
-          label="Marque"
-          name="brand"
-          required
+        <UForm
+          :schema="schema"
+          :state="state"
+          @submit="handleSubmit"
+          class="space-y-4"
         >
-          <UInput v-model="state.brand" />
-        </UFormGroup>
-        <UFormGroup
-          label="Modèle"
-          name="model"
-          required
-        >
-          <UInput v-model="state.model" />
-        </UFormGroup>
-        <UFormGroup
-          label="Description"
-          name="description"
-        >
-          <UInput
-            v-model="state.description"
-            placeholder="Ex. : Voiture de service, 4x4 rouge…"
-          />
-        </UFormGroup>
-        <UFormGroup
-          label="Immatriculation"
-          name="registration"
-          required
-        >
-          <UInput v-model="state.registration" />
-        </UFormGroup>
-        <UFormGroup
-          label="Numéro de série"
-          name="serialNumber"
-        >
-          <UInput v-model="state.serialNumber" />
-        </UFormGroup>
-        <UFormGroup
-          label="Année de première immatriculation"
-          name="registrationYear"
-          required
-        >
-          <UInput
-            v-model="state.registrationYear"
-            type="number"
-            min="1900"
-            :max="new Date().getFullYear()"
-          />
-        </UFormGroup>
-        <UFormGroup
-          label="Compteur kilométrique"
-          name="odometer"
-          required
-        >
-          <UInput
-            v-model="state.odometer"
-            type="number"
-            min="1"
-          />
-        </UFormGroup>
+          <UFormGroup
+            label="Marque"
+            name="brand"
+            required
+          >
+            <UInput v-model="state.brand" />
+          </UFormGroup>
+          <UFormGroup
+            label="Modèle"
+            name="model"
+            required
+          >
+            <UInput v-model="state.model" />
+          </UFormGroup>
+          <UFormGroup
+            label="Description"
+            name="description"
+          >
+            <UInput
+              v-model="state.description"
+              placeholder="Ex. : Voiture de service, 4x4 rouge…"
+            />
+          </UFormGroup>
+          <UFormGroup
+            label="Immatriculation"
+            name="registration"
+            required
+          >
+            <UInput v-model="state.registration" />
+          </UFormGroup>
+          <UFormGroup
+            label="Numéro de série"
+            name="serialNumber"
+          >
+            <UInput v-model="state.serialNumber" />
+          </UFormGroup>
+          <UFormGroup
+            label="Année de première immatriculation"
+            name="registrationYear"
+            required
+          >
+            <UInput
+              v-model="state.registrationYear"
+              type="number"
+              min="1900"
+              :max="new Date().getFullYear()"
+            />
+          </UFormGroup>
+          <UFormGroup
+            label="Compteur kilométrique"
+            name="odometer"
+            required
+          >
+            <UInput
+              v-model="state.odometer"
+              type="number"
+              min="1"
+            />
+          </UFormGroup>
 
-        <UButton
-          type="submit"
-          :loading="loading"
-          block
-        >
-          Sauvegarder
-        </UButton>
-      </UForm>
-    </UCard>
-  </div>
+          <UButton
+            type="submit"
+            :loading="loading"
+            block
+          >
+            Sauvegarder
+          </UButton>
+        </UForm>
+      </UCard>
+    </div>
+  </ProfileLayout>
 </template>
