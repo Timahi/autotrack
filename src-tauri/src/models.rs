@@ -23,7 +23,7 @@ pub struct NewProfile {
 #[derive(AsChangeset, Deserialize)]
 #[diesel(table_name = crate::schema::profiles)]
 pub struct EditProfile {
-    pub name: String,
+    pub name: Option<String>,
     pub updated_at: NaiveDateTime,
 }
 
@@ -65,14 +65,14 @@ pub struct NewVehicle {
 #[derive(AsChangeset, Deserialize)]
 #[diesel(table_name = crate::schema::vehicles)]
 pub struct EditVehicle {
-    pub brand: String,
-    pub model: String,
-    pub odometer: i32,
-    pub odometer_updated_at: NaiveDateTime,
-    pub registration: String,
-    pub registration_year: i32,
+    pub brand: Option<String>,
+    pub model: Option<String>,
+    pub odometer: Option<i32>,
+    pub odometer_updated_at: Option<NaiveDateTime>,
+    pub registration: Option<String>,
+    pub registration_year: Option<i32>,
     pub serial_number: Option<String>,
     pub description: Option<String>,
-    pub profile_id: i32,
+    pub profile_id: Option<i32>,
     pub updated_at: NaiveDateTime,
 }
