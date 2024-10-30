@@ -32,7 +32,17 @@ const schema = $profileService.schemas.update
 type Values = z.infer<typeof schema>
 
 const state = reactive<Values>({
-  name: '',
+  name: undefined,
+})
+
+const noChanges = computed(() => {
+  for (const value of Object.values(state)) {
+    if (value) {
+      return false
+    }
+  }
+
+  return true
 })
 
 const toast = useToast()
@@ -50,6 +60,11 @@ async function handleSubmit(event: FormSubmitEvent<Values>) {
       toast.add({ id: 'profile-update-error', title: error })
     } else {
       toast.add({ id: 'profile-update-error', title: 'Une erreur est survenue' })
+    }
+  } finally {
+    for (const key of Object.keys(state)) {
+      console.log(key)
+      state[key as keyof typeof state] = undefined
     }
   }
 }
@@ -88,20 +103,33 @@ async function handleDelete() {
         class="space-y-4"
       >
         <UFormGroup
-          label="Nouveau nom du profil"
+          label="Nom du profil"
           name="name"
         >
-          <UInput
-            v-model="state.name"
-            :placeholder="profile.name"
-          />
+          <div class="flex items-center gap-2">
+            <UInput
+              v-model="state.name"
+              :placeholder="profile.name"
+              class="flex-1"
+            />
+            <!--suppress PointlessBooleanExpressionJS -->
+            <UButton
+              color="white"
+              class="size-8"
+              @click="state.name = undefined"
+              :disabled="!state.name"
+            >
+              <IRotateCcw />
+            </UButton>
+          </div>
         </UFormGroup>
 
         <UButton
           type="submit"
-          :disabled="state.name === profile.name"
+          :disabled="noChanges"
           block
-          >Mettre à jour le profil
+        >
+          Mettre à jour
         </UButton>
       </UForm>
 

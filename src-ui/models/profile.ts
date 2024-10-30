@@ -46,12 +46,12 @@ export class NewProfile {
 
 export class EditProfile {
   private constructor(
-    public name: string,
-    public updatedAt: Date
+    public updatedAt: Date,
+    public name?: string
   ) {}
 
-  static from({ name }: { name: string }) {
-    return new EditProfile(name, new Date())
+  static from({ name }: { name?: string }) {
+    return new EditProfile(new Date(), name)
   }
 
   toJSON() {

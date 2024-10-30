@@ -70,10 +70,7 @@ export default defineNuxtPlugin(() => {
       }),
 
       update: z.object({
-        name: z
-          .string()
-          .min(1, 'Le nom du profil est obligatoire')
-          .max(200, 'Le nom du profil ne peut excéder 200 caractères'),
+        name: z.string().max(200, 'Le nom du profil ne peut excéder 200 caractères').optional(),
       }),
     },
   }
