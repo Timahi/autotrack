@@ -26,9 +26,23 @@ diesel::table! {
     }
 }
 
+diesel::table! {
+    inspections (id) {
+        id -> Integer,
+        vehicle_id -> Integer,
+        result -> Integer,
+        performed_at -> Timestamp,
+        next_at -> Timestamp,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
 diesel::joinable!(vehicles -> profiles (profile_id));
+diesel::joinable!(inspections -> vehicles (vehicle_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     profiles,
     vehicles,
+    inspections,
 );

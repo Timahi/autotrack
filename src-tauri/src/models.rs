@@ -76,3 +76,37 @@ pub struct EditVehicle {
     pub profile_id: Option<i32>,
     pub updated_at: NaiveDateTime,
 }
+
+#[derive(Queryable, Selectable, Identifiable, Serialize)]
+#[diesel(table_name = crate::schema::inspections)]
+#[diesel(check_for_backend(diesel::sqlite::Sqlite))]
+pub struct Inspection {
+    pub id: i32,
+    pub vehicle_id: i32,
+    pub result: i32,
+    pub performed_at: NaiveDateTime,
+    pub next_at: NaiveDateTime,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
+}
+
+#[derive(Insertable, Deserialize)]
+#[diesel(table_name = crate::schema::inspections)]
+pub struct NewInspection {
+    pub vehicle_id: i32,
+    pub result: i32,
+    pub performed_at: NaiveDateTime,
+    pub next_at: NaiveDateTime,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
+}
+
+#[derive(AsChangeset, Deserialize)]
+#[diesel(table_name = crate::schema::inspections)]
+pub struct EditInspection {
+    pub vehicle_id: Option<i32>,
+    pub result: Option<i32>,
+    pub performed_at: Option<NaiveDateTime>,
+    pub next_at: Option<NaiveDateTime>,
+    pub updated_at: NaiveDateTime,
+}

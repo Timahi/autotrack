@@ -104,7 +104,6 @@ pub fn create_vehicle(
 
     match diesel::insert_into(vehicles)
         .values(&new_vehicle)
-        .returning(Vehicle::as_returning())
         .get_result(conn)
     {
         Ok(v) => Ok(v),
@@ -132,5 +131,67 @@ pub fn delete_vehicle(conn: &mut SqliteConnection, vehicle_id: i32) -> Result<()
     {
         Ok(_) => Ok(()),
         Err(_) => Err("Échec lors de la suppression du véhicule".to_string())
+    }
+}
+
+pub fn get_inspections(conn: &mut SqliteConnection, _vehicle_id: i32) -> Result<Vec<Inspection>, String> {
+    use crate::schema::inspections::dsl::*;
+
+    match inspections
+        .filter(vehicle_id.eq(_vehicle_id))
+        .get_results(conn)
+    {
+        Ok(v) => Ok(v),
+        Err(_) => Err("Échec lors de la récupération des contrôles techniques".to_string())
+    }
+}
+
+pub fn get_inspection_by_id(conn: &mut SqliteConnection, inspection_id: i32) -> Result<Inspection, String> {
+    use crate::schema::inspections::dsl::*;
+
+    match inspections
+        .find(inspection_id)
+        .get_result(conn)
+    {
+        Ok(v) => Ok(v),
+        Err(_) => Err("Échec lors de la récupération du contrôle technique".to_string())
+    }
+}
+
+pub fn create_inspection(
+    conn: &mut SqliteConnection,
+    new_inspection: NewInspection,
+) -> Result<Inspection, String> {
+    use crate::schema::inspections::dsl::*;
+
+    match diesel::insert_into(inspections)
+        .values(&new_inspection)
+        .get_result(conn)
+    {
+        Ok(v) => Ok(v),
+        Err(_) => Err("Échec lors de la création du contrôle technique".to_string()),
+    }
+}
+
+pub fn update_inspection(conn: &mut SqliteConnection, inspection_id: i32, edit_inspection: EditInspection) -> Result<Inspection, String> {
+    use crate::schema::inspections::dsl::*;
+
+    match diesel::update(inspections.find(inspection_id))
+        .set(&edit_inspection)
+        .get_result(conn)
+    {
+        Ok(v) => Ok(v),
+        Err(_) => Err("Échec lors de la mise à jour du contrôle technique".to_string())
+    }
+}
+
+pub fn delete_inspection(conn: &mut SqliteConnection, inspection_id: i32) -> Result<(), String> {
+    use crate::schema::inspections::dsl::*;
+
+    match diesel::delete(inspections.find(inspection_id))
+        .execute(conn)
+    {
+        Ok(_) => Ok(()),
+        Err(_) => Err("Échec lors de la suppression du contrôle technique".to_string())
     }
 }
