@@ -1,31 +1,38 @@
 use crate::models::*;
-use crate::schema::profiles::dsl::*;
-use chrono::Utc;
 use diesel::prelude::*;
 use diesel::result::{DatabaseErrorKind, Error};
 
 pub fn get_profiles(conn: &mut SqliteConnection) -> Result<Vec<Profile>, String> {
-    profiles
-        .select(Profile::as_select())
+    use crate::schema::profiles::dsl::*;
+
+    match profiles
         .get_results(conn)
-        .map_err(|_| "Échec lors de la récupération des profils".to_string())
+    {
+        Ok(p) => Ok(p),
+        Err(_) => Err("Échec lors de la récupération des profils".to_string())
+    }
 }
 
 pub fn get_profile_by_id(conn: &mut SqliteConnection, profile_id: i32) -> Result<Profile, String> {
-    profiles
+    use crate::schema::profiles::dsl::*;
+
+    match profiles
         .find(profile_id)
-        .select(Profile::as_select())
         .get_result(conn)
-        .map_err(|_| "Échec lors de la récupération du profil".to_string())
+    {
+        Ok(p) => Ok(p),
+        Err(_) => Err("Échec lors de la récupération des profils".to_string())
+    }
 }
 
 pub fn create_profile(
     conn: &mut SqliteConnection,
     new_profile: NewProfile,
 ) -> Result<Profile, String> {
+    use crate::schema::profiles::dsl::*;
+
     match diesel::insert_into(profiles)
         .values(&new_profile)
-        .returning(Profile::as_returning())
         .get_result(conn)
     {
         Ok(profile) => Ok(profile),
@@ -41,12 +48,10 @@ pub fn update_profile(
     profile_id: i32,
     edit_profile: EditProfile,
 ) -> Result<Profile, String> {
+    use crate::schema::profiles::dsl::*;
+
     match diesel::update(profiles.find(profile_id))
-        .set((
-            name.eq(edit_profile.name),
-            updated_at.eq(Utc::now().naive_utc()),
-        ))
-        .returning(Profile::as_returning())
+        .set(&edit_profile)
         .get_result(conn)
     {
         Ok(profile) => Ok(profile),
@@ -58,9 +63,75 @@ pub fn update_profile(
 }
 
 pub fn delete_profile(conn: &mut SqliteConnection, profile_id: i32) -> Result<(), String> {
+    use crate::schema::profiles::dsl::*;
+
     match diesel::delete(profiles.find(profile_id))
         .execute(conn) {
         Ok(_) => Ok(()),
         Err(_) => Err("Échec lors de la suppression du profil".to_string())
+    }
+}
+
+pub fn get_vehicles(conn: &mut SqliteConnection, _profile_id: i32) -> Result<Vec<Vehicle>, String> {
+    use crate::schema::vehicles::dsl::*;
+
+    match vehicles
+        .filter(profile_id.eq(_profile_id))
+        .get_results(conn)
+    {
+        Ok(v) => Ok(v),
+        Err(_) => Err("Échec lors de la récupération des véhicules".to_string())
+    }
+}
+
+pub fn get_vehicle_by_id(conn: &mut SqliteConnection, _profile_id: i32, vehicle_id: i32) -> Result<Vehicle, String> {
+    use crate::schema::vehicles::dsl::*;
+
+    match vehicles
+        .find(vehicle_id)
+        .filter(profile_id.eq(_profile_id))
+        .get_result(conn)
+    {
+        Ok(v) => Ok(v),
+        Err(_) => Err("Échec lors de la récupération du véhicule".to_string())
+    }
+}
+
+pub fn create_vehicle(
+    conn: &mut SqliteConnection,
+    new_vehicle: NewVehicle,
+) -> Result<Vehicle, String> {
+    use crate::schema::vehicles::dsl::*;
+
+    match diesel::insert_into(vehicles)
+        .values(&new_vehicle)
+        .returning(Vehicle::as_returning())
+        .get_result(conn)
+    {
+        Ok(v) => Ok(v),
+        Err(_) => Err("Échec lors de la création du véhicule".to_string()),
+    }
+}
+
+pub fn update_vehicle(conn: &mut SqliteConnection, vehicle_id: i32, edit_vehicle: EditVehicle) -> Result<Vehicle, String> {
+    use crate::schema::vehicles::dsl::*;
+
+    match diesel::update(vehicles.find(vehicle_id))
+        .set(&edit_vehicle)
+        .get_result(conn)
+    {
+        Ok(v) => Ok(v),
+        Err(_) => Err("Échec lors de la mise à jour du véhicule".to_string())
+    }
+}
+
+pub fn delete_vehicle(conn: &mut SqliteConnection, vehicle_id: i32) -> Result<(), String> {
+    use crate::schema::vehicles::dsl::*;
+
+    match diesel::delete(vehicles.find(vehicle_id))
+        .execute(conn)
+    {
+        Ok(_) => Ok(()),
+        Err(_) => Err("Échec lors de la suppression du véhicule".to_string())
     }
 }

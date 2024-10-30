@@ -1,7 +1,6 @@
 use crate::db::{get_database_url, Database};
-use crate::models::{EditProfile, NewProfile, Profile};
-use crate::repositories::{create_profile, delete_profile, get_profile_by_id, get_profiles, update_profile};
-use chrono::Utc;
+use crate::models::{EditProfile, EditVehicle, NewProfile, NewVehicle, Profile, Vehicle};
+use crate::repositories::*;
 use std::fs;
 use std::path::PathBuf;
 use std::sync::Mutex;
@@ -43,7 +42,8 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             import_database_to_path_command, export_database_to_path_command,
-            get_profiles_command, get_profile_by_id_command, create_profile_command, update_profile_command, delete_profile_command
+            get_profiles_command, get_profile_by_id_command, create_profile_command, update_profile_command, delete_profile_command,
+            get_vehicles_command, get_vehicle_by_id_command, create_vehicle_command, update_vehicle_command, delete_vehicle_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -109,9 +109,8 @@ fn get_profile_by_id_command(app_state: State<'_, Mutex<AppState>>, profile_id: 
 }
 
 #[tauri::command]
-fn create_profile_command(app_state: State<'_, Mutex<AppState>>, name: String) -> Result<Profile,
+fn create_profile_command(app_state: State<'_, Mutex<AppState>>, new_profile: NewProfile) -> Result<Profile,
     String> {
-    let new_profile = NewProfile { name: &name, created_at: &Utc::now().naive_utc(), updated_at: &Utc::now().naive_utc() };
     let mut state = app_state.lock().unwrap();
     let conn = &mut state.db.conn;
 
@@ -119,9 +118,8 @@ fn create_profile_command(app_state: State<'_, Mutex<AppState>>, name: String) -
 }
 
 #[tauri::command]
-fn update_profile_command(app_state: State<'_, Mutex<AppState>>, profile_id: i32, name: String) -> Result<Profile,
+fn update_profile_command(app_state: State<'_, Mutex<AppState>>, profile_id: i32, edit_profile: EditProfile) -> Result<Profile,
     String> {
-    let edit_profile = EditProfile { name: &name, updated_at: &Utc::now().naive_utc() };
     let mut state = app_state.lock().unwrap();
     let conn = &mut state.db.conn;
 
@@ -135,4 +133,47 @@ fn delete_profile_command(app_state: State<'_, Mutex<AppState>>, profile_id: i32
     let conn = &mut state.db.conn;
 
     delete_profile(conn, profile_id)
+}
+
+#[tauri::command]
+fn get_vehicles_command(app_state: State<'_, Mutex<AppState>>, profile_id: i32) -> Result<Vec<Vehicle>, String> {
+    let mut state = app_state.lock().unwrap();
+    let conn = &mut state.db.conn;
+
+    get_vehicles(conn, profile_id)
+}
+
+#[tauri::command]
+fn get_vehicle_by_id_command(app_state: State<'_, Mutex<AppState>>, profile_id: i32, vehicle_id: i32) -> Result<Vehicle, String> {
+    let mut state = app_state.lock().unwrap();
+    let conn = &mut state.db.conn;
+
+    get_vehicle_by_id(conn, profile_id, vehicle_id)
+}
+
+#[tauri::command]
+fn create_vehicle_command(app_state: State<'_, Mutex<AppState>>, new_vehicle: NewVehicle) -> Result<Vehicle,
+    String> {
+    let mut state = app_state.lock().unwrap();
+    let conn = &mut state.db.conn;
+
+    create_vehicle(conn, new_vehicle)
+}
+
+#[tauri::command]
+fn update_vehicle_command(app_state: State<'_, Mutex<AppState>>, vehicle_id: i32, edit_vehicle: EditVehicle) -> Result<Vehicle,
+    String> {
+    let mut state = app_state.lock().unwrap();
+    let conn = &mut state.db.conn;
+
+    update_vehicle(conn, vehicle_id, edit_vehicle)
+}
+
+#[tauri::command]
+fn delete_vehicle_command(app_state: State<'_, Mutex<AppState>>, vehicle_id: i32) -> Result<(),
+    String> {
+    let mut state = app_state.lock().unwrap();
+    let conn = &mut state.db.conn;
+
+    delete_vehicle(conn, vehicle_id)
 }

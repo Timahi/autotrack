@@ -1,4 +1,4 @@
-import Profile from '~/models/profile'
+import { EditProfile, NewProfile, Profile } from '~/models/profile'
 import { invoke } from '@tauri-apps/api/core'
 import { z } from 'zod'
 
@@ -8,7 +8,7 @@ export default defineNuxtPlugin(() => {
       return new Promise<Profile[]>(async (resolve, reject) => {
         try {
           const data = await invoke<any[]>('get_profiles_command')
-          resolve(data.map((p) => Profile.fromJSON(p)))
+          resolve(data.map((p) => Profile.from(p)))
         } catch (error) {
           reject(error)
         }
@@ -19,29 +19,31 @@ export default defineNuxtPlugin(() => {
       return new Promise<Profile>(async (resolve, reject) => {
         try {
           const data = await invoke<any>('get_profile_by_id_command', { profileId })
-          resolve(Profile.fromJSON(data))
+          resolve(Profile.from(data))
         } catch (error) {
           reject(error)
         }
       })
     },
 
-    async create({ name }: z.infer<typeof this.schemas.create>) {
+    async create(values: z.infer<typeof this.schemas.create>) {
       return new Promise<Profile>(async (resolve, reject) => {
         try {
-          const data = await invoke<any>('create_profile_command', { name })
-          resolve(Profile.fromJSON(data))
+          const newProfile = NewProfile.from(values).toJSON()
+          const data = await invoke<any>('create_profile_command', { newProfile })
+          resolve(Profile.from(data))
         } catch (error) {
           reject(error)
         }
       })
     },
 
-    async update(profileId: number, { name }: z.infer<typeof this.schemas.update>) {
+    async update(profileId: number, values: z.infer<typeof this.schemas.update>) {
       return new Promise<Profile>(async (resolve, reject) => {
         try {
-          const data = await invoke<any>('update_profile_command', { profileId, name })
-          resolve(Profile.fromJSON(data))
+          const editProfile = EditProfile.from(values).toJSON()
+          const data = await invoke<any>('update_profile_command', { profileId, editProfile })
+          resolve(Profile.from(data))
         } catch (error) {
           reject(error)
         }
