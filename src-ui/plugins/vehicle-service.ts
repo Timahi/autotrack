@@ -4,10 +4,10 @@ import { EditVehicle, NewVehicle, Vehicle } from '~/models/vehicle'
 
 export default defineNuxtPlugin(() => {
   const vehicleService = {
-    async getAll() {
+    async getAll(profileId: number) {
       return new Promise<Vehicle[]>(async (resolve, reject) => {
         try {
-          const data = await invoke<any[]>('get_vehicles_command')
+          const data = await invoke<any[]>('get_vehicles_command', { profileId })
           resolve(data.map((p) => Vehicle.from(p)))
         } catch (error) {
           reject(error)
@@ -15,10 +15,10 @@ export default defineNuxtPlugin(() => {
       })
     },
 
-    async getById(vehicleId: number) {
+    async getById(profileId: number, vehicleId: number) {
       return new Promise<Vehicle>(async (resolve, reject) => {
         try {
-          const data = await invoke<any>('get_vehicle_by_id_command', { vehicleId })
+          const data = await invoke<any>('get_vehicle_by_id_command', { profileId, vehicleId })
           resolve(Vehicle.from(data))
         } catch (error) {
           reject(error)

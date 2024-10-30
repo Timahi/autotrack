@@ -97,11 +97,25 @@ async function handleExport() {
     }
   }
 }
+
+const links = computed(
+  () =>
+    [
+      {
+        label: 'Accueil',
+        to: `/profiles/${profile.value.id}`,
+      },
+      {
+        label: 'Véhicules',
+        to: `/profiles/${profile.value.id}/vehicles`,
+      },
+    ] as const
+)
 </script>
 
 <template>
   <div class="min-h-screen">
-    <header class="h-16 p-2 border-b border-neutral-600">
+    <header class="h-16 p-2 border-b border-neutral-600 grid grid-cols-3 items-center">
       <UDropdown
         mode="click"
         :items="items"
@@ -117,6 +131,20 @@ async function handleExport() {
           <IChevronDown class="size-6 shrink-0" />
         </UButton>
       </UDropdown>
+
+      <nav class="flex items-center justify-center gap-x-4">
+        <!--suppress HtmlUnknownTarget -->
+        <ULink
+          :to="link.to"
+          class="underline-offset-4"
+          active-class="text-primary underline"
+          inactive-class="hover:underline"
+          v-for="(link, index) of links"
+          :key="index"
+        >
+          {{ link.label }}
+        </ULink>
+      </nav>
     </header>
     <slot></slot>
 

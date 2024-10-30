@@ -46,10 +46,10 @@ const noChanges = computed(() => {
 })
 
 const toast = useToast()
-
+const submitLoading = ref(false)
 async function handleSubmit(event: FormSubmitEvent<Values>) {
   event.preventDefault()
-
+  submitLoading.value = true
   try {
     const result = await $profileService.update(profile.value.id, event.data)
     setProfile(result)
@@ -66,12 +66,15 @@ async function handleSubmit(event: FormSubmitEvent<Values>) {
       console.log(key)
       state[key as keyof typeof state] = undefined
     }
+    submitLoading.value = false
   }
 }
 
 const deleteModalOpen = ref(false)
+const deleteLoading = ref(false)
 
 async function handleDelete() {
+  deleteLoading.value = true
   try {
     await $profileService.delete(profile.value.id)
     toast.add({ id: 'profile-delete-success', title: 'Le profil a été supprimé', color: 'green' })
@@ -83,12 +86,14 @@ async function handleDelete() {
     } else {
       toast.add({ id: 'profile-delete-error', title: 'Une erreur est survenue' })
     }
+  } finally {
+    deleteLoading.value = false
   }
 }
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center text-neutral-300">
+  <div class="min-h-screen flex flex-col items-center justify-center">
     <UCard class="w-full max-w-xl">
       <template #header>
         <h1 class="text-2xl font-semibold text-center truncate">
@@ -127,6 +132,7 @@ async function handleDelete() {
         <UButton
           type="submit"
           :disabled="noChanges"
+          :loading="submitLoading"
           block
         >
           Mettre à jour
@@ -177,6 +183,7 @@ async function handleDelete() {
               Annuler
             </UButton>
             <UButton
+              :loading="deleteLoading"
               @click="
                 () => {
                   deleteModalOpen = false

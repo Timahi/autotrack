@@ -118,14 +118,14 @@ export class NewVehicle {
       brand: this.brand,
       model: this.model,
       odometer: this.odometer,
-      odometerUpdatedAt: this.odometerUpdatedAt.toISOString().slice(0, -1),
+      odometer_updated_at: this.odometerUpdatedAt.toISOString().slice(0, -1),
       registration: this.registration,
-      registrationYear: this.registrationYear,
-      serialNumber: this.serialNumber,
+      registration_year: this.registrationYear,
+      serial_number: this.serialNumber,
       description: this.description,
-      profileId: this.profileId,
-      createdAt: this.createdAt.toISOString().slice(0, -1),
-      updatedAt: this.updatedAt.toISOString().slice(0, -1),
+      profile_id: this.profileId,
+      created_at: this.createdAt.toISOString().slice(0, -1),
+      updated_at: this.updatedAt.toISOString().slice(0, -1),
     }
   }
 }

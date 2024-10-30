@@ -13,10 +13,10 @@ const state = reactive<Values>({
 })
 
 const toast = useToast()
-
+const loading = ref(false)
 async function handleSubmit(event: FormSubmitEvent<Values>) {
   event.preventDefault()
-
+  loading.value = true
   try {
     await $profileService.create(event.data)
     await navigateTo('/')
@@ -26,12 +26,14 @@ async function handleSubmit(event: FormSubmitEvent<Values>) {
     } else {
       toast.add({ id: 'create_post_error', title: 'Une erreur est survenue' })
     }
+  } finally {
+    loading.value = false
   }
 }
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center text-neutral-300 relative">
+  <div class="min-h-screen flex flex-col items-center justify-center relative">
     <div class="absolute top-0 left-0 m-5">
       <UButton
         variant="soft"
@@ -67,9 +69,11 @@ async function handleSubmit(event: FormSubmitEvent<Values>) {
 
         <UButton
           type="submit"
+          :loading="loading"
           block
-          >Créer le profil</UButton
         >
+          Sauvegarder
+        </UButton>
       </UForm>
     </UCard>
   </div>

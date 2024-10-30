@@ -38,8 +38,10 @@ async function handleExport() {
 </script>
 
 <template>
-  <div class="min-h-screen grid grid-rows-3 place-items-center text-neutral-300 mx-4">
-    <h1 class="text-4xl font-semibold">Sélectionner un profil</h1>
+  <div class="min-h-screen grid grid-rows-3 place-items-center mx-4">
+    <h1 class="text-4xl font-semibold text-neutral-300">
+      Auto<span class="font-bold text-primary">Track</span>
+    </h1>
 
     <div
       id="profile-list"
