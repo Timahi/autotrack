@@ -134,9 +134,10 @@ async function handleDelete() {
             Êtes-vous sûr de vouloir supprimer «&nbsp;{{ profile.name }}&nbsp;» ?
           </h3>
 
-          <p class="text-neutral-400 text-sm font-thin flex items-center">
-            <IAlertTriangle class="size-4 mr-2" />
-            Les données non exportées seront perdues
+          <p class="text-neutral-400 text-sm flex items-center text-pretty">
+            <!--            <IAlertTriangle class="size-4 mr-2" />-->
+            Tous les véhicules présents dans «&nbsp;{{ profile.name }}&nbsp;» seront supprimés s'ils
+            n'ont pas été exportés.
           </p>
 
           <div class="grid grid-cols-2 gap-4">
