@@ -34,6 +34,16 @@ watch(state, (input) => {
   }
 })
 
+const noChanges = computed(() => {
+  for (const value of Object.values(state)) {
+    if (value) {
+      return false
+    }
+  }
+
+  return true
+})
+
 const toast = useToast()
 const loading = ref(false)
 
@@ -296,6 +306,7 @@ async function handleDelete() {
           <UButton
             type="submit"
             :loading="loading"
+            :disabled="noChanges"
             block
           >
             Mettre à jour
@@ -307,7 +318,7 @@ async function handleDelete() {
               Dernière modification le {{ updatedAtDate }} à {{ updatedAtTime }}
             </p>
             <UTooltip
-              text="Supprimer le profil"
+              text="Supprimer le véhicule"
               :popper="{ arrow: true }"
             >
               <UButton

@@ -99,15 +99,20 @@ async function handleDelete() {
                 :placeholder="profile.name"
                 class="flex-1"
               />
-              <!--suppress PointlessBooleanExpressionJS -->
-              <UButton
-                color="white"
-                class="size-8"
-                @click="state.name = undefined"
-                :disabled="!state.name"
+              <UTooltip
+                :popper="{ arrow: true }"
+                text="Réinitialiser"
               >
-                <IRotateCcw />
-              </UButton>
+                <!--suppress PointlessBooleanExpressionJS -->
+                <UButton
+                  color="white"
+                  class="size-8"
+                  @click="state.name = undefined"
+                  :disabled="!state.name"
+                >
+                  <IRotateCcw />
+                </UButton>
+              </UTooltip>
             </div>
           </UFormGroup>
 
