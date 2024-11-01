@@ -38,11 +38,26 @@ diesel::table! {
     }
 }
 
+diesel::table! {
+    maintenance (id) {
+        id -> Integer,
+        vehicle_id -> Integer,
+        #[sql_name = "type"]
+        maintenance_type -> Text,
+        description -> Nullable<Text>,
+        performed_at -> Timestamp,
+        created_at -> Timestamp,
+        updated_at -> Timestamp
+    }
+}
+
 diesel::joinable!(vehicles -> profiles (profile_id));
 diesel::joinable!(inspections -> vehicles (vehicle_id));
+diesel::joinable!(maintenance -> vehicles (vehicle_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     profiles,
     vehicles,
     inspections,
+    maintenance,
 );
