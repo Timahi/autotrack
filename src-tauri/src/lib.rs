@@ -1,5 +1,5 @@
 use crate::db::{get_database_url, Database};
-use crate::models::{EditInspection, EditProfile, EditVehicle, Inspection, NewInspection, NewProfile, NewVehicle, Profile, Vehicle};
+use crate::models::{EditInspection, EditMaintenance, EditProfile, EditVehicle, Inspection, Maintenance, NewInspection, NewMaintenance, NewProfile, NewVehicle, Profile, Vehicle};
 use crate::repositories::*;
 use std::fs;
 use std::path::PathBuf;
@@ -44,7 +44,8 @@ pub fn run() {
             import_database_to_path_command, export_database_to_path_command,
             get_profiles_command, get_profile_by_id_command, create_profile_command, update_profile_command, delete_profile_command,
             get_vehicles_command, get_vehicle_by_id_command, create_vehicle_command, update_vehicle_command, delete_vehicle_command,
-            get_inspections_command, get_inspection_by_id_command, create_inspection_command, update_inspection_command, delete_inspection_command
+            get_inspections_command, get_inspection_by_id_command, create_inspection_command, update_inspection_command, delete_inspection_command,
+            get_maintenance_command, get_maintenance_by_id_command, create_maintenance_command, update_maintenance_command, delete_maintenance_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -220,4 +221,47 @@ fn delete_inspection_command(app_state: State<'_, Mutex<AppState>>, inspection_i
     let conn = &mut state.db.conn;
 
     delete_inspection(conn, inspection_id)
+}
+
+#[tauri::command]
+fn get_maintenance_command(app_state: State<'_, Mutex<AppState>>, vehicle_id: i32) -> Result<Vec<Maintenance>, String> {
+    let mut state = app_state.lock().unwrap();
+    let conn = &mut state.db.conn;
+
+    get_maintenance(conn, vehicle_id)
+}
+
+#[tauri::command]
+fn get_maintenance_by_id_command(app_state: State<'_, Mutex<AppState>>, maintenance_id: i32) -> Result<Maintenance, String> {
+    let mut state = app_state.lock().unwrap();
+    let conn = &mut state.db.conn;
+
+    get_maintenance_by_id(conn, maintenance_id)
+}
+
+#[tauri::command]
+fn create_maintenance_command(app_state: State<'_, Mutex<AppState>>, new_maintenance: NewMaintenance) -> Result<Maintenance,
+    String> {
+    let mut state = app_state.lock().unwrap();
+    let conn = &mut state.db.conn;
+
+    create_maintenance(conn, new_maintenance)
+}
+
+#[tauri::command]
+fn update_maintenance_command(app_state: State<'_, Mutex<AppState>>, maintenance_id: i32, edit_maintenance: EditMaintenance) -> Result<Maintenance,
+    String> {
+    let mut state = app_state.lock().unwrap();
+    let conn = &mut state.db.conn;
+
+    update_maintenance(conn, maintenance_id, edit_maintenance)
+}
+
+#[tauri::command]
+fn delete_maintenance_command(app_state: State<'_, Mutex<AppState>>, maintenance_id: i32) -> Result<(),
+    String> {
+    let mut state = app_state.lock().unwrap();
+    let conn = &mut state.db.conn;
+
+    delete_maintenance(conn, maintenance_id)
 }

@@ -195,3 +195,65 @@ pub fn delete_inspection(conn: &mut SqliteConnection, inspection_id: i32) -> Res
         Err(_) => Err("Échec lors de la suppression du contrôle technique".to_string())
     }
 }
+
+pub fn get_maintenance(conn: &mut SqliteConnection, _vehicle_id: i32) -> Result<Vec<Maintenance>, String> {
+    use crate::schema::maintenance::dsl::*;
+
+    match maintenance
+        .filter(vehicle_id.eq(_vehicle_id))
+        .get_results(conn)
+    {
+        Ok(v) => Ok(v),
+        Err(_) => Err("Échec lors de la récupération des entretiens".to_string())
+    }
+}
+
+pub fn get_maintenance_by_id(conn: &mut SqliteConnection, maintenance_id: i32) -> Result<Maintenance, String> {
+    use crate::schema::maintenance::dsl::*;
+
+    match maintenance
+        .find(maintenance_id)
+        .get_result(conn)
+    {
+        Ok(v) => Ok(v),
+        Err(_) => Err("Échec lors de la récupération de l'entretien".to_string())
+    }
+}
+
+pub fn create_maintenance(
+    conn: &mut SqliteConnection,
+    new_maintenance: NewMaintenance,
+) -> Result<Maintenance, String> {
+    use crate::schema::maintenance::dsl::*;
+
+    match diesel::insert_into(maintenance)
+        .values(&new_maintenance)
+        .get_result(conn)
+    {
+        Ok(v) => Ok(v),
+        Err(_) => Err("Échec lors de la création de l'entretien".to_string()),
+    }
+}
+
+pub fn update_maintenance(conn: &mut SqliteConnection, maintenance_id: i32, edit_maintenance: EditMaintenance) -> Result<Maintenance, String> {
+    use crate::schema::maintenance::dsl::*;
+
+    match diesel::update(maintenance.find(maintenance_id))
+        .set(&edit_maintenance)
+        .get_result(conn)
+    {
+        Ok(v) => Ok(v),
+        Err(_) => Err("Échec lors de la mise à jour de l'entretien".to_string())
+    }
+}
+
+pub fn delete_maintenance(conn: &mut SqliteConnection, maintenance_id: i32) -> Result<(), String> {
+    use crate::schema::maintenance::dsl::*;
+
+    match diesel::delete(maintenance.find(maintenance_id))
+        .execute(conn)
+    {
+        Ok(_) => Ok(()),
+        Err(_) => Err("Échec lors de la suppression de la maintenance".to_string())
+    }
+}
