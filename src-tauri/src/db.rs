@@ -1,3 +1,4 @@
+use diesel::connection::SimpleConnection;
 use diesel::{Connection, SqliteConnection};
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use dotenvy::dotenv;
@@ -18,10 +19,13 @@ impl Database {
 
         let mut conn = establish_connection(db_url);
 
-        match run_migrations(&mut conn) {
-            Ok(_) => Ok(Database {
-                conn,
-            }),
+        match conn.batch_execute("PRAGMA foreign_keys = ON;") {
+            Ok(_) => match run_migrations(&mut conn) {
+                Ok(_) => Ok(Database {
+                    conn,
+                }),
+                Err(_) => Err("Erreur lors du chargement de la base de donnée".to_string())
+            },
             Err(_) => Err("Erreur lors du chargement de la base de donnée".to_string())
         }
     }
