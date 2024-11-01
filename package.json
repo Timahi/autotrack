@@ -8,7 +8,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "format": "prettier -w ."
+    "format": "prettier -w .",
+    "tauri": "tauri"
   },
   "dependencies": {
     "@nuxt/ui": "^2.18.7",
