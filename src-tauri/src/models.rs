@@ -117,6 +117,7 @@ pub struct EditInspection {
 pub struct Maintenance {
     pub id: i32,
     pub vehicle_id: i32,
+    #[serde(rename = "type")]
     pub maintenance_type: String,
     pub description: Option<String>,
     pub odometer: i32,

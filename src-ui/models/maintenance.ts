@@ -13,7 +13,7 @@ export class Maintenance {
   static from({
     id,
     vehicle_id,
-    maintenance_type,
+    type,
     description,
     odometer,
     performed_at,
@@ -22,7 +22,7 @@ export class Maintenance {
   }: {
     id: number
     vehicle_id: number
-    maintenance_type: string
+    type: string
     description: string | null
     odometer: number
     performed_at: string
@@ -32,7 +32,7 @@ export class Maintenance {
     return new Maintenance(
       id,
       vehicle_id,
-      maintenance_type,
+      type,
       description,
       odometer,
       new Date(performed_at + 'Z'),
@@ -84,7 +84,7 @@ export class NewMaintenance {
   toJSON() {
     return {
       vehicle_id: this.vehicleId,
-      maintenance_type: this.type,
+      type: this.type,
       description: this.description || undefined,
       odometer: this.odometer,
       performed_at: this.performedAt.toISOString().slice(0, -1),
@@ -125,7 +125,7 @@ export class EditMaintenance {
   toJSON() {
     return {
       vehicle_id: this.vehicleId,
-      maintenance_type: this.type,
+      type: this.type,
       description: this.description,
       odometer: this.odometer,
       performed_at: this.performedAt?.toISOString().slice(0, -1),
