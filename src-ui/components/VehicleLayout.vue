@@ -1,10 +1,18 @@
 <script lang="ts" setup>
-import type { HorizontalNavigationLink } from '#ui/types'
+import type { FormSubmitEvent, HorizontalNavigationLink } from '#ui/types'
+import { z } from 'zod'
 
 const profile = await useProfile()
 const vehicle = await useVehicle()
 
 const route = useRoute()
+
+const odometerShouldBeUpdated = computed(() => {
+  const diff = 7 * 24 * 60 * 60 * 1000 // 7 days
+  return Date.now() - vehicle.value.odometerUpdatedAt.getTime() > diff
+})
+
+const odometerModalOpen = ref(false)
 
 const links: HorizontalNavigationLink[][] = [
   [
@@ -60,14 +68,125 @@ const links: HorizontalNavigationLink[][] = [
     },
   ],
 ]
+
+const schema = z.object({
+  odometer: z
+    .number()
+    .int()
+    .min(
+      vehicle.value.odometer,
+      "Vous ne pouvez pas diminuer le compteur kilométrique. Si vous avez fait une erreur lors de la création du véhicule, merci de passer par l'onglet « Modifier »"
+    ),
+})
+
+type Values = z.infer<typeof schema>
+
+const state = reactive<Values>({
+  odometer: vehicle.value.odometer,
+})
+
+const loading = ref(false)
+const toast = useToast()
+const { $vehicleService } = useNuxtApp()
+
+async function handleSubmit(event: FormSubmitEvent<Values>) {
+  event.preventDefault()
+  loading.value = true
+  try {
+    await $vehicleService.update(vehicle.value.id, vehicle.value.odometer, event.data)
+    toast.add({ id: 'odometer-update-success', title: 'Le compteur kilométrique a été mis à jour' })
+  } catch (error) {
+    if (typeof error === 'string') {
+      toast.add({ id: 'odometer-update-error', title: error })
+    } else {
+      toast.add({ id: 'odometer-update-error', title: 'Une erreur est survenue' })
+    }
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <template>
   <div>
-    <header class="px-10">
+    <header class="px-10 flex items-center gap-1.5">
       <UHorizontalNavigation :links="links" />
+      <UChip
+        :show="odometerShouldBeUpdated"
+        size="lg"
+      >
+        <UTooltip
+          :text="
+            odometerShouldBeUpdated
+              ? 'Dernière mise à jour il y a plus d\'une semaine !'
+              : undefined
+          "
+          :popper="{ arrow: true }"
+        >
+          <UButton
+            :variant="odometerShouldBeUpdated ? 'soft' : 'ghost'"
+            :color="odometerShouldBeUpdated ? 'primary' : 'gray'"
+            icon="i-lucide-gauge"
+            :class="odometerShouldBeUpdated || '!text-gray-400 hover:!text-white'"
+            @click="odometerModalOpen = true"
+            >Mettre à jour le kilométrage
+          </UButton>
+        </UTooltip>
+      </UChip>
     </header>
 
     <slot></slot>
+
+    <UModal v-model="odometerModalOpen">
+      <UCard>
+        <template #header>
+          <h1 class="text-xl font-semibold text-center">Mise à jour du kilométrage</h1>
+        </template>
+
+        <UForm
+          :schema="schema"
+          :state="state"
+          @submit="handleSubmit"
+          class="space-y-4"
+        >
+          <UFormGroup
+            label="Nouveau kilométrage"
+            name="odometer"
+          >
+            <div class="flex items-center gap-2">
+              <UInput
+                v-model="state.odometer"
+                class="flex-1"
+                type="number"
+                :min="vehicle.odometer"
+              />
+              <UTooltip
+                :popper="{ arrow: true }"
+                text="Réinitialiser"
+              >
+                <!--suppress PointlessBooleanExpressionJS -->
+                <UButton
+                  color="white"
+                  class="size-8"
+                  @click="state.odometer = vehicle.odometer"
+                  :disabled="state.odometer === vehicle.odometer"
+                >
+                  <IRotateCcw />
+                </UButton>
+              </UTooltip>
+            </div>
+          </UFormGroup>
+
+          <UButton
+            type="submit"
+            :loading="loading"
+            :disabled="state.odometer === vehicle.odometer"
+            block
+          >
+            Mettre à jour
+          </UButton>
+        </UForm>
+      </UCard>
+    </UModal>
   </div>
 </template>
