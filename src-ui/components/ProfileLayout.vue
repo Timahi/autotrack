@@ -155,9 +155,8 @@ const links = computed(
             Vérifiez que vous avez bien exporté vos données actuelles !
           </h3>
 
-          <p class="text-neutral-400 text-sm font-thin flex items-center">
-            <IAlertTriangle class="size-4 mr-2" />
-            Les données non exportées seront écrasées
+          <p class="text-neutral-400 text-sm text-pretty">
+            Toutes les données non exportées seront écrasées et définitivement perdues.
           </p>
 
           <div class="grid grid-cols-2 gap-4">

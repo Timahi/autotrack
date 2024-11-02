@@ -1,11 +1,7 @@
 <script lang="ts" setup>
-const vehicle = await useVehicle()
+definePageMeta({
+  redirect: (to) => to.fullPath.toString() + '/maintenance',
+})
 </script>
 
-<template>
-  <ProfileLayout>
-    <div class="min-h-screen flex flex-col items-center justify-center">
-      <pre>{{ vehicle }}</pre>
-    </div>
-  </ProfileLayout>
-</template>
+<template></template>

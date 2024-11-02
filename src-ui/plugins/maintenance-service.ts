@@ -99,7 +99,7 @@ export default defineNuxtPlugin(() => {
 
   return {
     provide: {
-      profileService: maintenanceService,
+      maintenanceService,
     },
   }
 })

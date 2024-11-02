@@ -2,11 +2,9 @@
 const profile = await useProfile()
 const { $vehicleService } = useNuxtApp()
 
-const { data: vehicles, error } = useAsyncData(`profile-${profile.value.id}-vehicles`, () =>
+const { data: vehicles } = useAsyncData(`profile-${profile.value.id}-vehicles`, () =>
   $vehicleService.getAll(profile.value.id)
 )
-
-console.log(vehicles, error)
 
 const columns = [
   {
