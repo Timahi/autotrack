@@ -82,6 +82,10 @@ export default defineNuxtPlugin(() => {
           .min(1, "Le type d'entretien est obligatoire")
           .max(200, "Le type d'entretien ne peut excéder 200 caractères"),
         description: z.string().optional(),
+        odometer: z
+          .number()
+          .int('Le relevé kilométrique doit être un nombre entier')
+          .gte(1, 'Le compteur kilométrique ne peut pas être négatif'),
         performedAt: z.date(),
       }),
 
@@ -92,6 +96,11 @@ export default defineNuxtPlugin(() => {
           .max(200, "Le type d'entretien ne peut excéder 200 caractères")
           .optional(),
         description: z.string().optional(),
+        odometer: z
+          .number()
+          .int('Le relevé kilométrique doit être un nombre entier')
+          .gte(1, 'Le compteur kilométrique ne peut pas être négatif')
+          .optional(),
         performedAt: z.date().optional(),
       }),
     },

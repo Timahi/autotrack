@@ -119,6 +119,7 @@ pub struct Maintenance {
     pub vehicle_id: i32,
     pub maintenance_type: String,
     pub description: Option<String>,
+    pub odometer: i32,
     pub performed_at: NaiveDateTime,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
@@ -130,6 +131,7 @@ pub struct NewMaintenance {
     pub vehicle_id: i32,
     pub maintenance_type: String,
     pub description: Option<String>,
+    pub odometer: i32,
     pub performed_at: NaiveDateTime,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
@@ -141,6 +143,7 @@ pub struct EditMaintenance {
     pub vehicle_id: Option<i32>,
     pub maintenance_type: Option<String>,
     pub description: Option<String>,
+    pub odometer: Option<i32>,
     pub performed_at: Option<NaiveDateTime>,
     pub updated_at: NaiveDateTime,
 }

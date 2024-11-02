@@ -45,6 +45,7 @@ diesel::table! {
         #[sql_name = "type"]
         maintenance_type -> Text,
         description -> Nullable<Text>,
+        odometer -> Integer,
         performed_at -> Timestamp,
         created_at -> Timestamp,
         updated_at -> Timestamp

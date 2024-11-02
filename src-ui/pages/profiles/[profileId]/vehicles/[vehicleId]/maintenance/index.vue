@@ -18,6 +18,11 @@ const columns = [
     label: 'Description',
   },
   {
+    key: 'odometer',
+    label: 'Relevé kilométrique',
+    sortable: true,
+  },
+  {
     key: 'performedAt',
     label: 'Réalisé le',
     sortable: true,
@@ -34,6 +39,7 @@ const rows = computed(() =>
       maintenance.description && maintenance.description.length > 75
         ? maintenance.description.substring(0, 75) + '…'
         : maintenance.description,
+    odometer: maintenance.odometer,
     performedAt: `${formatDate(maintenance.performedAt)} à ${formatTime(maintenance.performedAt)}`,
   }))
 )

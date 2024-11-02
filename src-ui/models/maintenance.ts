@@ -4,6 +4,7 @@ export class Maintenance {
     public vehicleId: number,
     public type: string,
     public description: string | null,
+    public odometer: number,
     public performedAt: Date,
     public createdAt: Date,
     public updatedAt: Date
@@ -14,6 +15,7 @@ export class Maintenance {
     vehicle_id,
     maintenance_type,
     description,
+    odometer,
     performed_at,
     created_at,
     updated_at,
@@ -22,6 +24,7 @@ export class Maintenance {
     vehicle_id: number
     maintenance_type: string
     description: string | null
+    odometer: number
     performed_at: string
     created_at: string
     updated_at: string
@@ -31,6 +34,7 @@ export class Maintenance {
       vehicle_id,
       maintenance_type,
       description,
+      odometer,
       new Date(performed_at + 'Z'),
       new Date(created_at + 'Z'),
       new Date(updated_at + 'Z')
@@ -43,6 +47,7 @@ export class NewMaintenance {
     public vehicleId: number,
     public type: string,
     public description: string | null,
+    public odometer: number,
     public performedAt: Date,
     public createdAt: Date,
     public updatedAt: Date
@@ -52,6 +57,7 @@ export class NewMaintenance {
     vehicleId,
     type,
     description,
+    odometer,
     performedAt,
     createdAt,
     updatedAt,
@@ -59,6 +65,7 @@ export class NewMaintenance {
     vehicleId: number
     type: string
     description?: string
+    odometer: number
     performedAt: Date
     createdAt: Date
     updatedAt: Date
@@ -67,6 +74,7 @@ export class NewMaintenance {
       vehicleId,
       type,
       description || null,
+      odometer,
       performedAt,
       createdAt,
       updatedAt
@@ -78,6 +86,7 @@ export class NewMaintenance {
       vehicle_id: this.vehicleId,
       maintenance_type: this.type,
       description: this.description || undefined,
+      odometer: this.odometer,
       performed_at: this.performedAt.toISOString().slice(0, -1),
       created_at: this.createdAt.toISOString().slice(0, -1),
       updated_at: this.updatedAt.toISOString().slice(0, -1),
@@ -91,6 +100,7 @@ export class EditMaintenance {
     public vehicleId?: number,
     public type?: string,
     public description?: string,
+    public odometer?: number,
     public performedAt?: Date
   ) {}
 
@@ -98,16 +108,18 @@ export class EditMaintenance {
     vehicleId,
     type,
     description,
+    odometer,
     performedAt,
     updatedAt,
   }: {
     vehicleId?: number
     type?: string
     description?: string
+    odometer?: number
     performedAt?: Date
     updatedAt: Date
   }) {
-    return new EditMaintenance(updatedAt, vehicleId, type, description, performedAt)
+    return new EditMaintenance(updatedAt, vehicleId, type, description, odometer, performedAt)
   }
 
   toJSON() {
@@ -115,6 +127,7 @@ export class EditMaintenance {
       vehicle_id: this.vehicleId,
       maintenance_type: this.type,
       description: this.description,
+      odometer: this.odometer,
       performed_at: this.performedAt?.toISOString().slice(0, -1),
       updated_at: this.updatedAt.toISOString().slice(0, -1),
     }
