@@ -73,7 +73,7 @@ const schema = z.object({
   odometer: z
     .number()
     .int()
-    .min(
+    .gte(
       vehicle.value.odometer,
       "Vous ne pouvez pas diminuer le compteur kilométrique. Si vous avez fait une erreur lors de la création du véhicule, merci de passer par l'onglet « Modifier »"
     ),
@@ -81,9 +81,11 @@ const schema = z.object({
 
 type Values = z.infer<typeof schema>
 
-const state = reactive<Values>({
-  odometer: vehicle.value.odometer,
-})
+const state = computed(() =>
+  reactive<Values>({
+    odometer: vehicle.value.odometer,
+  })
+)
 
 const loading = ref(false)
 const toast = useToast()
@@ -94,7 +96,12 @@ async function handleSubmit(event: FormSubmitEvent<Values>) {
   loading.value = true
   try {
     await $vehicleService.update(vehicle.value.id, vehicle.value.odometer, event.data)
-    toast.add({ id: 'odometer-update-success', title: 'Le compteur kilométrique a été mis à jour' })
+    await refreshNuxtData(['vehicles', `vehicle-${vehicle.value.id}`])
+    toast.add({
+      id: 'odometer-update-success',
+      title: 'Le compteur kilométrique a été mis à jour',
+      color: 'green',
+    })
   } catch (error) {
     if (typeof error === 'string') {
       toast.add({ id: 'odometer-update-error', title: error })
@@ -180,7 +187,7 @@ async function handleSubmit(event: FormSubmitEvent<Values>) {
           <UButton
             type="submit"
             :loading="loading"
-            :disabled="state.odometer === vehicle.odometer"
+            :disabled="state.odometer === vehicle.odometer && !odometerShouldBeUpdated"
             block
           >
             Mettre à jour
