@@ -117,6 +117,10 @@ async function handleSubmit(event: FormSubmitEvent<Values>) {
 <template>
   <div>
     <header class="px-10 flex items-center gap-1.5">
+      <h2 class="text-nowrap text-sm mr-2 text-neutral-300">
+        {{ vehicle.brand }} {{ vehicle.model }}
+        <span class="text-neutral-400">- {{ vehicle.registration }}</span>
+      </h2>
       <UHorizontalNavigation :links="links" />
       <UChip
         :show="odometerShouldBeUpdated"
