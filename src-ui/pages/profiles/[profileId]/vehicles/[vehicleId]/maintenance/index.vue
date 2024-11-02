@@ -35,12 +35,13 @@ const columns = [
 const rows = computed(() =>
   (maintenances.value || []).map((maintenance) => ({
     id: maintenance.id,
+    type: maintenance.type,
     description:
       maintenance.description && maintenance.description.length > 75
         ? maintenance.description.substring(0, 75) + '…'
         : maintenance.description,
     odometer: maintenance.odometer,
-    performedAt: `${formatDate(maintenance.performedAt)} à ${formatTime(maintenance.performedAt)}`,
+    performedAt: formatDate(maintenance.performedAt),
   }))
 )
 </script>

@@ -15,8 +15,10 @@
     "@nuxt/ui": "^2.18.7",
     "@tauri-apps/api": "^2.0.3",
     "@tauri-apps/plugin-dialog": "~2",
+    "date-fns": "^4.1.0",
     "nuxt": "^3.13.2",
     "nuxt-lucide-icons": "^1.0.5",
+    "v-calendar": "^3.1.2",
     "vue": "latest",
     "vue-router": "latest",
     "zod": "^3.23.8"
