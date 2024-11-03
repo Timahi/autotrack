@@ -46,6 +46,7 @@ const attrs = {
   />
 </template>
 
+<!--suppress CssUnresolvedCustomProperty, CssUnusedSymbol -->
 <style>
 :root {
   --vc-gray-50: rgb(var(--color-gray-50));
