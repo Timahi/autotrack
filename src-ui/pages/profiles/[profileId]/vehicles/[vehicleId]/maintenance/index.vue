@@ -40,7 +40,7 @@ const rows = computed(() =>
       maintenance.description && maintenance.description.length > 75
         ? maintenance.description.substring(0, 75) + '…'
         : maintenance.description,
-    odometer: maintenance.odometer,
+    odometer: formatNumber(maintenance.odometer),
     performedAt: formatDate(maintenance.performedAt),
   }))
 )

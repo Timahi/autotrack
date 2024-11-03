@@ -28,3 +28,4 @@ diesel_migrations = "2.2.0"
 dotenvy = "0.15"
 chrono = { version = "0.4.38", features = ["serde"] }
 tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"

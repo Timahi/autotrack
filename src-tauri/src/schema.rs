@@ -56,9 +56,4 @@ diesel::joinable!(vehicles -> profiles (profile_id));
 diesel::joinable!(inspections -> vehicles (vehicle_id));
 diesel::joinable!(maintenance -> vehicles (vehicle_id));
 
-diesel::allow_tables_to_appear_in_same_query!(
-    profiles,
-    vehicles,
-    inspections,
-    maintenance,
-);
+diesel::allow_tables_to_appear_in_same_query!(profiles, vehicles, inspections, maintenance,);

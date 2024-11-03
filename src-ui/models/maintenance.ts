@@ -84,7 +84,7 @@ export class NewMaintenance {
   toJSON() {
     return {
       vehicle_id: this.vehicleId,
-      type: this.type,
+      maintenance_type: this.type,
       description: this.description || undefined,
       odometer: this.odometer,
       performed_at: this.performedAt.toISOString().slice(0, -1),
@@ -125,7 +125,7 @@ export class EditMaintenance {
   toJSON() {
     return {
       vehicle_id: this.vehicleId,
-      type: this.type,
+      maintenance_type: this.type,
       description: this.description,
       odometer: this.odometer,
       performed_at: this.performedAt?.toISOString().slice(0, -1),

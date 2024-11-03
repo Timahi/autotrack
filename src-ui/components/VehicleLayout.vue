@@ -6,6 +6,7 @@ const profile = await useProfile()
 const vehicle = await useVehicle()
 
 const route = useRoute()
+const { $maintenanceBookletService, $vehicleService } = useNuxtApp()
 
 const odometerShouldBeUpdated = computed(() => {
   const diff = 7 * 24 * 60 * 60 * 1000 // 7 days
@@ -13,6 +14,30 @@ const odometerShouldBeUpdated = computed(() => {
 })
 
 const odometerModalOpen = ref(false)
+
+const maintenanceBookletLoading = ref(false)
+
+const toast = useToast()
+
+async function handleCreateMaintenanceBooklet() {
+  maintenanceBookletLoading.value = true
+  try {
+    await $maintenanceBookletService.generate(vehicle.value.id)
+    toast.add({
+      id: 'booklet-creation-success',
+      title: "Le carnet d'entretien a été généré",
+      color: 'green',
+    })
+  } catch (error) {
+    if (typeof error === 'string') {
+      toast.add({ id: 'booklet-creation-error', title: error })
+    } else {
+      toast.add({ id: 'booklet-creation-error', title: 'Une erreur est survenue' })
+    }
+  } finally {
+    maintenanceBookletLoading.value = false
+  }
+}
 
 const links: HorizontalNavigationLink[][] = [
   [
@@ -88,8 +113,6 @@ const state = computed(() =>
 )
 
 const loading = ref(false)
-const toast = useToast()
-const { $vehicleService } = useNuxtApp()
 
 async function handleSubmit(event: FormSubmitEvent<Values>) {
   event.preventDefault()
@@ -144,6 +167,16 @@ async function handleSubmit(event: FormSubmitEvent<Values>) {
           </UButton>
         </UTooltip>
       </UChip>
+      <UButton
+        variant="ghost"
+        color="gray"
+        icon="i-lucide-notebook"
+        :loading="maintenanceBookletLoading"
+        @click="handleCreateMaintenanceBooklet"
+        class="!text-gray-400 hover:!text-white"
+      >
+        Générer un carnet d'entretien
+      </UButton>
     </header>
 
     <slot></slot>

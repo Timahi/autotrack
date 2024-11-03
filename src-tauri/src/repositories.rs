@@ -5,23 +5,18 @@ use diesel::result::{DatabaseErrorKind, Error};
 pub fn get_profiles(conn: &mut SqliteConnection) -> Result<Vec<Profile>, String> {
     use crate::schema::profiles::dsl::*;
 
-    match profiles
-        .get_results(conn)
-    {
+    match profiles.get_results(conn) {
         Ok(p) => Ok(p),
-        Err(_) => Err("Échec lors de la récupération des profils".to_string())
+        Err(_) => Err("Échec lors de la récupération des profils".to_string()),
     }
 }
 
 pub fn get_profile_by_id(conn: &mut SqliteConnection, profile_id: i32) -> Result<Profile, String> {
     use crate::schema::profiles::dsl::*;
 
-    match profiles
-        .find(profile_id)
-        .get_result(conn)
-    {
+    match profiles.find(profile_id).get_result(conn) {
         Ok(p) => Ok(p),
-        Err(_) => Err("Échec lors de la récupération des profils".to_string())
+        Err(_) => Err("Échec lors de la récupération des profils".to_string()),
     }
 }
 
@@ -65,10 +60,9 @@ pub fn update_profile(
 pub fn delete_profile(conn: &mut SqliteConnection, profile_id: i32) -> Result<(), String> {
     use crate::schema::profiles::dsl::*;
 
-    match diesel::delete(profiles.find(profile_id))
-        .execute(conn) {
+    match diesel::delete(profiles.find(profile_id)).execute(conn) {
         Ok(_) => Ok(()),
-        Err(_) => Err("Échec lors de la suppression du profil".to_string())
+        Err(_) => Err("Échec lors de la suppression du profil".to_string()),
     }
 }
 
@@ -80,19 +74,16 @@ pub fn get_vehicles(conn: &mut SqliteConnection, _profile_id: i32) -> Result<Vec
         .get_results(conn)
     {
         Ok(v) => Ok(v),
-        Err(_) => Err("Échec lors de la récupération des véhicules".to_string())
+        Err(_) => Err("Échec lors de la récupération des véhicules".to_string()),
     }
 }
 
 pub fn get_vehicle_by_id(conn: &mut SqliteConnection, vehicle_id: i32) -> Result<Vehicle, String> {
     use crate::schema::vehicles::dsl::*;
 
-    match vehicles
-        .find(vehicle_id)
-        .get_result(conn)
-    {
+    match vehicles.find(vehicle_id).get_result(conn) {
         Ok(v) => Ok(v),
-        Err(_) => Err("Échec lors de la récupération du véhicule".to_string())
+        Err(_) => Err("Échec lors de la récupération du véhicule".to_string()),
     }
 }
 
@@ -111,7 +102,11 @@ pub fn create_vehicle(
     }
 }
 
-pub fn update_vehicle(conn: &mut SqliteConnection, vehicle_id: i32, edit_vehicle: EditVehicle) -> Result<Vehicle, String> {
+pub fn update_vehicle(
+    conn: &mut SqliteConnection,
+    vehicle_id: i32,
+    edit_vehicle: EditVehicle,
+) -> Result<Vehicle, String> {
     use crate::schema::vehicles::dsl::*;
 
     match diesel::update(vehicles.find(vehicle_id))
@@ -119,22 +114,23 @@ pub fn update_vehicle(conn: &mut SqliteConnection, vehicle_id: i32, edit_vehicle
         .get_result(conn)
     {
         Ok(v) => Ok(v),
-        Err(_) => Err("Échec lors de la mise à jour du véhicule".to_string())
+        Err(_) => Err("Échec lors de la mise à jour du véhicule".to_string()),
     }
 }
 
 pub fn delete_vehicle(conn: &mut SqliteConnection, vehicle_id: i32) -> Result<(), String> {
     use crate::schema::vehicles::dsl::*;
 
-    match diesel::delete(vehicles.find(vehicle_id))
-        .execute(conn)
-    {
+    match diesel::delete(vehicles.find(vehicle_id)).execute(conn) {
         Ok(_) => Ok(()),
-        Err(_) => Err("Échec lors de la suppression du véhicule".to_string())
+        Err(_) => Err("Échec lors de la suppression du véhicule".to_string()),
     }
 }
 
-pub fn get_inspections(conn: &mut SqliteConnection, _vehicle_id: i32) -> Result<Vec<Inspection>, String> {
+pub fn get_inspections(
+    conn: &mut SqliteConnection,
+    _vehicle_id: i32,
+) -> Result<Vec<Inspection>, String> {
     use crate::schema::inspections::dsl::*;
 
     match inspections
@@ -142,19 +138,19 @@ pub fn get_inspections(conn: &mut SqliteConnection, _vehicle_id: i32) -> Result<
         .get_results(conn)
     {
         Ok(v) => Ok(v),
-        Err(_) => Err("Échec lors de la récupération des contrôles techniques".to_string())
+        Err(_) => Err("Échec lors de la récupération des contrôles techniques".to_string()),
     }
 }
 
-pub fn get_inspection_by_id(conn: &mut SqliteConnection, inspection_id: i32) -> Result<Inspection, String> {
+pub fn get_inspection_by_id(
+    conn: &mut SqliteConnection,
+    inspection_id: i32,
+) -> Result<Inspection, String> {
     use crate::schema::inspections::dsl::*;
 
-    match inspections
-        .find(inspection_id)
-        .get_result(conn)
-    {
+    match inspections.find(inspection_id).get_result(conn) {
         Ok(v) => Ok(v),
-        Err(_) => Err("Échec lors de la récupération du contrôle technique".to_string())
+        Err(_) => Err("Échec lors de la récupération du contrôle technique".to_string()),
     }
 }
 
@@ -173,7 +169,11 @@ pub fn create_inspection(
     }
 }
 
-pub fn update_inspection(conn: &mut SqliteConnection, inspection_id: i32, edit_inspection: EditInspection) -> Result<Inspection, String> {
+pub fn update_inspection(
+    conn: &mut SqliteConnection,
+    inspection_id: i32,
+    edit_inspection: EditInspection,
+) -> Result<Inspection, String> {
     use crate::schema::inspections::dsl::*;
 
     match diesel::update(inspections.find(inspection_id))
@@ -181,22 +181,23 @@ pub fn update_inspection(conn: &mut SqliteConnection, inspection_id: i32, edit_i
         .get_result(conn)
     {
         Ok(v) => Ok(v),
-        Err(_) => Err("Échec lors de la mise à jour du contrôle technique".to_string())
+        Err(_) => Err("Échec lors de la mise à jour du contrôle technique".to_string()),
     }
 }
 
 pub fn delete_inspection(conn: &mut SqliteConnection, inspection_id: i32) -> Result<(), String> {
     use crate::schema::inspections::dsl::*;
 
-    match diesel::delete(inspections.find(inspection_id))
-        .execute(conn)
-    {
+    match diesel::delete(inspections.find(inspection_id)).execute(conn) {
         Ok(_) => Ok(()),
-        Err(_) => Err("Échec lors de la suppression du contrôle technique".to_string())
+        Err(_) => Err("Échec lors de la suppression du contrôle technique".to_string()),
     }
 }
 
-pub fn get_maintenance(conn: &mut SqliteConnection, _vehicle_id: i32) -> Result<Vec<Maintenance>, String> {
+pub fn get_maintenance(
+    conn: &mut SqliteConnection,
+    _vehicle_id: i32,
+) -> Result<Vec<Maintenance>, String> {
     use crate::schema::maintenance::dsl::*;
 
     match maintenance
@@ -204,19 +205,19 @@ pub fn get_maintenance(conn: &mut SqliteConnection, _vehicle_id: i32) -> Result<
         .get_results(conn)
     {
         Ok(v) => Ok(v),
-        Err(_) => Err("Échec lors de la récupération des entretiens".to_string())
+        Err(_) => Err("Échec lors de la récupération des entretiens".to_string()),
     }
 }
 
-pub fn get_maintenance_by_id(conn: &mut SqliteConnection, maintenance_id: i32) -> Result<Maintenance, String> {
+pub fn get_maintenance_by_id(
+    conn: &mut SqliteConnection,
+    maintenance_id: i32,
+) -> Result<Maintenance, String> {
     use crate::schema::maintenance::dsl::*;
 
-    match maintenance
-        .find(maintenance_id)
-        .get_result(conn)
-    {
+    match maintenance.find(maintenance_id).get_result(conn) {
         Ok(v) => Ok(v),
-        Err(_) => Err("Échec lors de la récupération de l'entretien".to_string())
+        Err(_) => Err("Échec lors de la récupération de l'entretien".to_string()),
     }
 }
 
@@ -235,7 +236,11 @@ pub fn create_maintenance(
     }
 }
 
-pub fn update_maintenance(conn: &mut SqliteConnection, maintenance_id: i32, edit_maintenance: EditMaintenance) -> Result<Maintenance, String> {
+pub fn update_maintenance(
+    conn: &mut SqliteConnection,
+    maintenance_id: i32,
+    edit_maintenance: EditMaintenance,
+) -> Result<Maintenance, String> {
     use crate::schema::maintenance::dsl::*;
 
     match diesel::update(maintenance.find(maintenance_id))
@@ -243,17 +248,15 @@ pub fn update_maintenance(conn: &mut SqliteConnection, maintenance_id: i32, edit
         .get_result(conn)
     {
         Ok(v) => Ok(v),
-        Err(_) => Err("Échec lors de la mise à jour de l'entretien".to_string())
+        Err(_) => Err("Échec lors de la mise à jour de l'entretien".to_string()),
     }
 }
 
 pub fn delete_maintenance(conn: &mut SqliteConnection, maintenance_id: i32) -> Result<(), String> {
     use crate::schema::maintenance::dsl::*;
 
-    match diesel::delete(maintenance.find(maintenance_id))
-        .execute(conn)
-    {
+    match diesel::delete(maintenance.find(maintenance_id)).execute(conn) {
         Ok(_) => Ok(()),
-        Err(_) => Err("Échec lors de la suppression de la maintenance".to_string())
+        Err(_) => Err("Échec lors de la suppression de la maintenance".to_string()),
     }
 }

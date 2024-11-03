@@ -17,3 +17,5 @@ export const { format: formatTime } = Intl.DateTimeFormat('fr-FR', {
   minute: '2-digit',
   timeZone: 'Europe/Paris',
 })
+
+export const { format: formatNumber } = Intl.NumberFormat('fr-FR')
