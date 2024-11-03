@@ -1,15 +1,62 @@
 <script lang="ts" setup>
 const route = useRoute()
+
 const { $maintenanceService } = useNuxtApp()
-const { data } = useAsyncData(`maintenance-${route.params.maintenanceId}`, () =>
+const { data: maintenance, error } = useAsyncData(`maintenance-${route.params.maintenanceId}`, () =>
   $maintenanceService.getById(+route.params.maintenanceId)
 )
+
+const toast = useToast()
+
+if (error.value) {
+  toast.add({ id: 'maintenance-doesnt-exists', title: "Cet entretien n'existe plus" })
+  await navigateTo({
+    name: 'profiles-profileId-vehicles-vehicleId-maintenance',
+    params: { profileId: route.params.profileId, vehicleId: route.params.vehicleId },
+  })
+}
 </script>
 
 <template>
   <ProfileLayout>
     <VehicleLayout>
-      <pre>{{ data }}</pre>
+      <div class="h-[calc(100vh-9rem-48px)] flex flex-col items-center justify-center">
+        <UCard class="w-full max-w-xl">
+          <template #header>
+            <h1 class="text-2xl font-semibold text-center">{{ maintenance!.type }}</h1>
+          </template>
+
+          <p class="whitespace-pre">{{ maintenance!.description }}</p>
+
+          <template #footer>
+            <div class="flex items-center justify-between">
+              <div class="flex flex-col">
+                <p class="text-sm text-neutral-400">
+                  Réalisé le :
+                  <span class="text-white">{{ formatDate(maintenance!.performedAt) }}</span>
+                </p>
+                <p class="text-sm text-neutral-400">
+                  Relevé kilométrique :
+                  <span class="text-white">{{ formatNumber(maintenance!.odometer) }}</span>
+                </p>
+              </div>
+
+              <UTooltip
+                text="Modifier l'entretien"
+                :popper="{ arrow: true }"
+              >
+                <UButton
+                  color="gray"
+                  size="sm"
+                  square
+                >
+                  <IPencil class="size-5" />
+                </UButton>
+              </UTooltip>
+            </div>
+          </template>
+        </UCard>
+      </div>
     </VehicleLayout>
   </ProfileLayout>
 </template>
