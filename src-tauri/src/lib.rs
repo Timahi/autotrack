@@ -110,7 +110,6 @@ fn export_database_to_path_command(app_handle: AppHandle, path: String) -> Resul
     match fs::copy(PathBuf::from(&db_path), PathBuf::from(path.to_string())) {
         Ok(_) => Ok(()),
         Err(e) => {
-            eprintln!("Erreur lors de la copie de la base de données : {:?}", e);
             Err("Échec lors de l'exportation des données.".to_string())
         }
     }

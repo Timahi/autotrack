@@ -74,7 +74,6 @@ export default defineNuxtPlugin(() => {
 
           resolve()
         } catch (error) {
-          console.log(error)
           reject("Échec lors de la génération du carnet d'entretien")
         }
       })
