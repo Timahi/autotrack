@@ -8,7 +8,11 @@ export default defineNuxtPlugin(() => {
       return new Promise<Maintenance[]>(async (resolve, reject) => {
         try {
           const data = await invoke<any[]>('get_maintenance_command', { vehicleId })
-          resolve(data.map((m) => Maintenance.from(m)))
+          resolve(
+            data
+              .map((m) => Maintenance.from(m))
+              .sort((a, b) => a.performedAt.getTime() - b.performedAt.getTime())
+          )
         } catch (error) {
           reject(error)
         }
