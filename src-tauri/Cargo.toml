@@ -29,3 +29,4 @@ dotenvy = "0.15"
 chrono = { version = "0.4.38", features = ["serde"] }
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
+rusqlite = { version = "0.32.0", features = ["bundled"] }
