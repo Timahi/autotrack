@@ -19,3 +19,8 @@ export const { format: formatTime } = Intl.DateTimeFormat('fr-FR', {
 })
 
 export const { format: formatNumber } = Intl.NumberFormat('fr-FR')
+
+export const { format: format2DigitsNumber } = Intl.NumberFormat('fr-FR', {
+  minimumIntegerDigits: 2,
+  useGrouping: false,
+})

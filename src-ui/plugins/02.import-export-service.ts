@@ -32,6 +32,8 @@ export default defineNuxtPlugin(() => {
     async export() {
       return new Promise<void>(async (resolve, reject) => {
         try {
+          const now = new Date()
+
           const path = await save({
             filters: [
               {
@@ -39,6 +41,7 @@ export default defineNuxtPlugin(() => {
                 extensions: ['db', 'sqlite'],
               },
             ],
+            defaultPath: `autotrack_${now.getFullYear()}-${format2DigitsNumber(now.getMonth() + 1)}-${format2DigitsNumber(now.getDate())}_${format2DigitsNumber(now.getHours())}-${format2DigitsNumber(now.getMinutes())}`,
           })
 
           if (!path) {
