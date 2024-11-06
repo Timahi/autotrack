@@ -48,7 +48,7 @@ async function handleExport() {
       class="relative w-full max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl"
     >
       <div
-        class="flex items-center gap-6 overflow-x-scroll whitespace-nowrap p-6"
+        class="flex items-center gap-6 overflow-x-auto whitespace-nowrap p-6"
         :class="{ 'justify-center': !profiles?.length }"
       >
         <!--suppress HtmlUnknownTarget -->
@@ -155,8 +155,8 @@ async function handleExport() {
 <style scoped>
 #profile-list::before {
   content: '';
-  background: linear-gradient(90deg, rgba(30, 30, 30, 1) 0%, rgba(255, 255, 255, 0) 100%);
-  height: 260px;
+  background: linear-gradient(90deg, rgb(30, 30, 30) 0%, rgba(255, 255, 255, 0) 100%);
+  height: 256px;
   width: 30px;
   position: absolute;
   z-index: 20;
@@ -167,11 +167,11 @@ async function handleExport() {
 #profile-list::after {
   content: '';
   background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(30, 30, 30, 1) 100%);
-  height: 260px;
+  height: 256px;
   width: 30px;
   position: absolute;
   z-index: 20;
-  right: 0;
   top: 0;
+  right: 0;
 }
 </style>
