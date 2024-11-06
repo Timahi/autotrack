@@ -38,14 +38,12 @@ async function handleExport() {
 </script>
 
 <template>
-  <div class="min-h-screen grid grid-rows-3 place-items-center mx-4">
-    <h1 class="text-4xl font-semibold">
-      Auto<span class="font-bold text-primary">Track</span>
-    </h1>
+  <div class="min-h-screen grid grid-rows-3 place-items-center mx-4 overflow-hidden">
+    <h1 class="text-4xl font-semibold">Auto<span class="font-bold text-primary">Track</span></h1>
 
     <div
       id="profile-list"
-      class="relative w-full max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl"
+      class="w-full max-w-screen-sm lg:max-w-screen-md xl:max-w-screen-lg 2xl:max-w-screen-xl"
     >
       <div
         class="flex items-center gap-6 overflow-x-auto whitespace-nowrap p-6"
@@ -115,6 +113,9 @@ async function handleExport() {
       </div>
     </div>
 
+    <div class="fade-left"></div>
+    <div class="fade-right"></div>
+
     <UModal v-model="importConfirmationModalOpen">
       <UCard>
         <div class="space-y-4">
@@ -153,25 +154,21 @@ async function handleExport() {
 </template>
 
 <style scoped>
-#profile-list::before {
-  content: '';
-  background: linear-gradient(90deg, rgba(18,18,18,255) 0%, rgba(255,255,255,0) 100%);  
-  height: 256px;
-  width: 30px;
-  position: absolute;
-  z-index: 20;
-  top: 0;
-  left: 0;
-}
-
-#profile-list::after {
-  content: '';
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(18,18,18,255) 100%);
-  height: 256px;
-  width: 30px;
-  position: absolute;
-  z-index: 20;
-  top: 0;
-  right: 0;
+#profile-list {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 30px,
+    black calc(100% - 30px),
+    transparent
+  );
+  /*noinspection CssInvalidPropertyValue*/
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 30px,
+    black calc(100% - 30px),
+    transparent
+  );
 }
 </style>
