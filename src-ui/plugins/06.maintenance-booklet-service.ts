@@ -35,7 +35,9 @@ export default defineNuxtPlugin(() => {
 
           // TODO: implement new pages
 
-          for (const m of maintenance) {
+          for (const m of maintenance.sort(
+            (a, b) => b.performedAt.getTime() - a.performedAt.getTime()
+          )) {
             doc.setFontSize(14)
             doc.text(`${formatDate(m.performedAt)} - ${m.odometer}km - ${m.type}`, 20, yIndex)
 
