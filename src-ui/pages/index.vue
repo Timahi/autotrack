@@ -39,7 +39,7 @@ async function handleExport() {
 
 <template>
   <div class="min-h-screen grid grid-rows-3 place-items-center mx-4">
-    <h1 class="text-4xl font-semibold text-neutral-300">
+    <h1 class="text-4xl font-semibold">
       Auto<span class="font-bold text-primary">Track</span>
     </h1>
 
@@ -155,7 +155,7 @@ async function handleExport() {
 <style scoped>
 #profile-list::before {
   content: '';
-  background: linear-gradient(90deg, rgb(30, 30, 30) 0%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(90deg, rgba(18,18,18,255) 0%, rgba(255,255,255,0) 100%);  
   height: 256px;
   width: 30px;
   position: absolute;
@@ -166,7 +166,7 @@ async function handleExport() {
 
 #profile-list::after {
   content: '';
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(30, 30, 30, 1) 100%);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(18,18,18,255) 100%);
   height: 256px;
   width: 30px;
   position: absolute;
