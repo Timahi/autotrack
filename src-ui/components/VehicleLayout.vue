@@ -5,6 +5,9 @@ import { z } from 'zod'
 const profile = await useProfile()
 const vehicle = await useVehicle()
 
+const odometerUpdatedAtDate = computed(() => formatDate(vehicle.value.odometerUpdatedAt))
+const odometerUpdatedAtTime = computed(() => formatTime(vehicle.value.odometerUpdatedAt))
+
 const route = useRoute()
 const { $maintenanceBookletService, $vehicleService } = useNuxtApp()
 
@@ -219,6 +222,10 @@ async function handleSubmit(event: FormSubmitEvent<Values>) {
                 </UButton>
               </UTooltip>
             </div>
+            <p class="text-xs text-neutral-500 mt-0.5">
+              Dernière mise à jour du compteur le {{ odometerUpdatedAtDate }} à
+              {{ odometerUpdatedAtTime }}
+            </p>
           </UFormGroup>
 
           <UButton
