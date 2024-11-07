@@ -38,7 +38,7 @@ async function handleExport() {
 </script>
 
 <template>
-  <div class="min-h-screen grid grid-rows-3 place-items-center mx-4 overflow-hidden">
+  <div class="h-screen grid grid-rows-3 place-items-center mx-4">
     <h1 class="text-4xl font-semibold">Auto<span class="font-bold text-primary">Track</span></h1>
 
     <div
