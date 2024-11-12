@@ -1,11 +1,7 @@
 <script lang="ts" setup>
-const profile = await useProfile()
+definePageMeta({
+  redirect: (to) => to.fullPath.toString() + '/vehicles',
+})
 </script>
 
-<template>
-  <ProfileLayout>
-    <div class="min-h-screen flex flex-col items-center justify-center">
-      <pre>{{ profile }}</pre>
-    </div>
-  </ProfileLayout>
-</template>
+<template></template>

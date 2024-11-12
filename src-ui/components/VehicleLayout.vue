@@ -69,6 +69,7 @@ const links: HorizontalNavigationLink[][] = [
         )
       ).value,
       icon: 'i-lucide-bell',
+      disabled: true,
     },
     {
       label: 'Contrôle Technique',
@@ -82,6 +83,7 @@ const links: HorizontalNavigationLink[][] = [
         )
       ).value,
       icon: 'i-lucide-clipboard-list',
+      disabled: true,
     },
   ],
 

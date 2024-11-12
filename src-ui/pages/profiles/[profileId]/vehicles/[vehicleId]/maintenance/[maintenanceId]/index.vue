@@ -1,20 +1,7 @@
 <script lang="ts" setup>
-const route = useRoute()
-
-const { $maintenanceService } = useNuxtApp()
-const { data: maintenance, error } = useAsyncData(`maintenance-${route.params.maintenanceId}`, () =>
-  $maintenanceService.getById(+route.params.maintenanceId)
-)
-
-const toast = useToast()
-
-if (error.value) {
-  toast.add({ id: 'maintenance-doesnt-exists', title: "Cet entretien n'existe plus" })
-  await navigateTo({
-    name: 'profiles-profileId-vehicles-vehicleId-maintenance',
-    params: { profileId: route.params.profileId, vehicleId: route.params.vehicleId },
-  })
-}
+const profile = await useProfile()
+const vehicle = await useVehicle()
+const maintenance = await useMaintenance()
 </script>
 
 <template>
@@ -48,6 +35,7 @@ if (error.value) {
                 <UButton
                   color="gray"
                   size="sm"
+                  :to="`/profiles/${profile.id}/vehicles/${vehicle.id}/maintenance/${maintenance.id}/edit`"
                   square
                 >
                   <IPencil class="size-5" />

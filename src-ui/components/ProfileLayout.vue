@@ -101,10 +101,10 @@ async function handleExport() {
 const links = computed(
   () =>
     [
-      {
-        label: 'Accueil',
-        to: `/profiles/${profile.value.id}`,
-      },
+      // {
+      //   label: 'Accueil',
+      //   to: `/profiles/${profile.value.id}`,
+      // },
       {
         label: 'Véhicules',
         to: `/profiles/${profile.value.id}/vehicles`,
