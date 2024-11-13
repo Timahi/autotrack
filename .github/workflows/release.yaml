@@ -49,7 +49,20 @@ jobs:
         with:
           tagName: autotrack-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
           releaseName: 'AutoTrack v__VERSION__'
-          releaseBody: 'See the assets to download this version and install.'
+          releaseBody: "## Installation
+            
+            ### Windows (x64)
+            
+            1. Télécharger le fichier d'installation dans la section **Assets** terminant en `x64-setup.exe`.
+            2. L'application n'étant pas signée pour des raisons budgétaires, un message d'alerte de sécurité est susceptible de s'afficher. Pour poursuivre, ce message doit être ignoré.
+            
+            ### MacOS
+            
+            1. Télécharger le fichier d'installation dans la section **Assets** terminant en `aarch64.dmg` ou `x64.dmg` correspondant à l'architecture de la machine.
+            2. L'application n'étant pas signée pour des raisons budgétaires, elle ne sera pas exécutable. Pour poursuivre, ouvrir un Terminal dans le dossier d'installation de l'application puis saisir la commande :
+            ```sh
+            xattr -cr AutoTrack.app
+            ```"
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
