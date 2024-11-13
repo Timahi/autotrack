@@ -1,3 +1,6 @@
+<!--suppress ALL -->
+<img align="right" width="75" src="./app-icon.png" alt="AutoTrack">
+
 # 🚗 AutoTrack
 
 _Traquez la maintenance de vos véhicules en un clic !_
