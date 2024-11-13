@@ -21,3 +21,7 @@ Se rendre dans l'onglet [Releases](https://github.com/Timahi/autotrack/releases)
 Les bugs connus et les demandes de nouvelles fonctionnalités se situent dans l'onglet [Issues](https://github.com/Timahi/autotrack/issues).
 
 Si un bug est découvert ou pour toute requête, merci d'ouvrir une nouvelle issue.
+
+## Licence :
+
+Ce projet est soumis à la licence [GNU Affero General Public License (AGPL) v3](https://www.gnu.org/licenses/agpl-3.0.html).
