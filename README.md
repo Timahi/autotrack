@@ -14,7 +14,7 @@ AutoTrack vous permet de suivre la maintenance de vos véhicules :
 
 ## Installation :
 
-Se rendre dans l'onglet [Release](https://github.com/Timahi/autotrack/releases) et suivre les instructions d'installation.
+Se rendre dans l'onglet [Releases](https://github.com/Timahi/autotrack/releases) et suivre les instructions d'installation.
 
 ## Bugs et fonctionnalités futures :
 
