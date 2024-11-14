@@ -1,17 +1,28 @@
 ---
 name: Nouvelle fonctionnalité
 about: Suggérer une nouvelle fonctionnalité
-title: "[Feature Request]"
+title: '[Feature]'
 labels: enhancement
 assignees: ''
-
 ---
 
-**La fonctionnalité demandée est-elle lié a un problème ?**
-Indiquer une description du problème. Ex. : Je ne peux pas faire [...]
+**Fonctionnalités attendues**
 
-**Solution espérée**
-Indiquer la solution idéale au problème.
+Indiquer ce que la nouvelle fonctionnalité devrait faire :
+
+- ...
+- ...
+- ...
+
+**Motivations**
+
+Indiquer pourquoi cette nouvelle fonctionnalité s'avèrerait utile.
+
+**Idée d'implémentation**
+
+Si possible, indiquer une première idée de comment cette nouvelle fonctionnalité pourrait être réalisée.
+Ou comment elle devrait fonctionner pour correspondre au mieux aux besoins auxquels elle répond.
 
 **Contexte supplémentaire**
-Ajouter toute information supplémentaire (capture d'écran...) permettant de s'approcher au mieux de la solution.
+
+Si nécessaire, ajouter toute information supplémentaire à propos de cette fonctionnalité.
